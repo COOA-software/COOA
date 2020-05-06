@@ -1,0 +1,2447 @@
+VERSION 5.00
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.2#0"; "MSCOMCTL.OCX"
+Begin VB.Form Form1 
+   BackColor       =   &H00404040&
+   Caption         =   "     Word_co-ocurrences - Vzdálenosti slov"
+   ClientHeight    =   7200
+   ClientLeft      =   60
+   ClientTop       =   645
+   ClientWidth     =   8940
+   Icon            =   "Word_co-ocurrences -240.frx":0000
+   LinkTopic       =   "Form1"
+   ScaleHeight     =   7200
+   ScaleWidth      =   8940
+   StartUpPosition =   2  'CenterScreen
+   Begin MSComctlLib.ProgressBar ProgressBar 
+      Height          =   252
+      Left            =   3360
+      TabIndex        =   26
+      Top             =   3360
+      Width           =   4092
+      _ExtentX        =   7223
+      _ExtentY        =   450
+      _Version        =   393216
+      Appearance      =   1
+      Scrolling       =   1
+   End
+   Begin VB.CommandButton cmd_NOVÉ_ZADÁNÍ 
+      Caption         =   "Nové zadání"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   9.75
+         Charset         =   238
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   400
+      Left            =   2600
+      TabIndex        =   16
+      Top             =   6650
+      Width           =   2175
+   End
+   Begin VB.Frame frm_VÝSLEDKY 
+      Caption         =   "                              Výsledkové sestavy                                   "
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   12
+         Charset         =   238
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00000000&
+      Height          =   2415
+      Left            =   120
+      TabIndex        =   18
+      Top             =   4080
+      Width           =   7600
+      Begin VB.CommandButton cmd_VZOREC_CSV 
+         Caption         =   "Normalizované vzdálenosti slov (csv)"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   400
+         Left            =   3600
+         TabIndex        =   24
+         Top             =   1480
+         Width           =   3400
+      End
+      Begin VB.CommandButton cmd_VZOREC_TXT 
+         Caption         =   "Normalizované vzdálenosti slov (txt)"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   400
+         Left            =   3600
+         TabIndex        =   23
+         Top             =   960
+         Width           =   3400
+      End
+      Begin VB.CommandButton cmd_ABSOLUTNÍ_VZDÁLENOSTI 
+         Caption         =   "Absolutní vzdálenosti slov (txt)"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   400
+         Left            =   3600
+         TabIndex        =   22
+         Top             =   480
+         Width           =   3400
+      End
+      Begin VB.CommandButton cmd_OKOLÍ_SLOV 
+         Caption         =   "Okolí slov"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   400
+         Left            =   600
+         TabIndex        =   21
+         Top             =   1480
+         Width           =   2200
+      End
+      Begin VB.CommandButton cmd_FREKVENCE_SLOV 
+         Caption         =   "Frekvence slov"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   400
+         Left            =   600
+         TabIndex        =   20
+         Top             =   980
+         Width           =   2200
+      End
+      Begin VB.CommandButton cmd_KONTEXTOVÉ_JEDNOTKY 
+         Caption         =   "Kontextové jednotky"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   400
+         Left            =   600
+         TabIndex        =   19
+         Top             =   480
+         Width           =   2200
+      End
+      Begin VB.Label lbl_CESTA_VÝSLEDKY 
+         Alignment       =   2  'Center
+         BackStyle       =   0  'Transparent
+         Caption         =   """----"""
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00800000&
+         Height          =   255
+         Left            =   -120
+         TabIndex        =   25
+         Top             =   2100
+         Width           =   7335
+      End
+   End
+   Begin VB.CommandButton cmd_ZPRACUJ 
+      Caption         =   "START"
+      BeginProperty Font 
+         Name            =   "Arial Black"
+         Size            =   12
+         Charset         =   238
+         Weight          =   900
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   510
+      Left            =   4620
+      Style           =   1  'Graphical
+      TabIndex        =   6
+      Top             =   2610
+      Width           =   1665
+   End
+   Begin VB.Frame frm_KONTEXT_JEDNOTKA 
+      Caption         =   "Kontextová jednotka "
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   9.75
+         Charset         =   238
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   1400
+      Left            =   120
+      TabIndex        =   4
+      Top             =   2350
+      Width           =   3075
+      Begin VB.TextBox txt_DÉLKA_JEDNOTKY 
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   285
+         Left            =   1800
+         TabIndex        =   17
+         Text            =   "Text1"
+         Top             =   480
+         Width           =   975
+      End
+      Begin VB.TextBox txt_JINY_ZNAK 
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   240
+         Left            =   2310
+         TabIndex        =   12
+         Text            =   "#"
+         Top             =   1080
+         Width           =   285
+      End
+      Begin VB.OptionButton opt_JINY_ZNAK 
+         Caption         =   "Jiný dělící znak"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   195
+         Left            =   240
+         TabIndex        =   11
+         Top             =   1080
+         Width           =   1660
+      End
+      Begin VB.OptionButton opt_POCET_ODSTAVCU 
+         Caption         =   "Počet odstavců"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00000000&
+         Height          =   195
+         Left            =   180
+         TabIndex        =   9
+         Top             =   810
+         Width           =   1660
+      End
+      Begin VB.OptionButton opt_POCET_ZNAKU 
+         BackColor       =   &H00FFFFFF&
+         Caption         =   "Počet znaků - SKRYTÉ"
+         ForeColor       =   &H00000000&
+         Height          =   195
+         Left            =   960
+         TabIndex        =   8
+         Top             =   240
+         Width           =   1995
+      End
+      Begin VB.OptionButton opt_POCET_SLOV 
+         Caption         =   "Počet slov"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00000000&
+         Height          =   195
+         Left            =   240
+         TabIndex        =   7
+         Top             =   360
+         Width           =   1635
+      End
+      Begin VB.OptionButton opt_POCET_VET 
+         Caption         =   "Počet vět"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00000000&
+         Height          =   195
+         Left            =   180
+         TabIndex        =   5
+         Top             =   600
+         Width           =   1635
+      End
+      Begin VB.Label Label1 
+         BackStyle       =   0  'Transparent
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   420
+         Left            =   3825
+         TabIndex        =   10
+         Top             =   1125
+         Width           =   2310
+      End
+   End
+   Begin VB.Frame frm_SLOVNIK 
+      BackColor       =   &H80000000&
+      Caption         =   "Slovník"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   9.75
+         Charset         =   238
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   915
+      Left            =   100
+      TabIndex        =   2
+      Top             =   1170
+      Width           =   7600
+      Begin VB.CommandButton cmd_VYBER_SLOVNIK 
+         Caption         =   "Vyberte slovník"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   9.75
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   375
+         Left            =   180
+         TabIndex        =   15
+         Top             =   360
+         Width           =   1800
+      End
+      Begin VB.Label lbl_NAZEV_SLOVNIKU 
+         BackColor       =   &H00FFFFC0&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Slovník:"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   285
+         Left            =   2160
+         TabIndex        =   3
+         Top             =   450
+         Width           =   7600
+      End
+   End
+   Begin VB.Frame frm_SOUBOR 
+      BackColor       =   &H00DFFFFF&
+      Caption         =   "  Textový soubor  "
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   9.75
+         Charset         =   238
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   915
+      Left            =   135
+      TabIndex        =   0
+      Top             =   135
+      Width           =   7600
+      Begin VB.CommandButton cmd_VYBER_SOUBOR 
+         Caption         =   "Vyberte soubor"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   9.75
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   375
+         Left            =   180
+         TabIndex        =   14
+         Top             =   360
+         Width           =   2000
+      End
+      Begin VB.Label lbl_VYBRANY_SOUBOR 
+         BackStyle       =   0  'Transparent
+         Caption         =   "Soubor:"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   238
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   225
+         Left            =   2400
+         TabIndex        =   1
+         Top             =   240
+         Width           =   3705
+      End
+   End
+   Begin MSComDlg.CommonDialog dlg_OPEN 
+      Left            =   8040
+      Top             =   360
+      _ExtentX        =   847
+      _ExtentY        =   847
+      _Version        =   393216
+   End
+   Begin VB.Line Line3 
+      BorderColor     =   &H00FFFFFF&
+      BorderWidth     =   3
+      X1              =   90
+      X2              =   7700
+      Y1              =   3900
+      Y2              =   3900
+   End
+   Begin VB.Line Line2 
+      BorderColor     =   &H00FFFFFF&
+      BorderWidth     =   3
+      X1              =   90
+      X2              =   7700
+      Y1              =   2205
+      Y2              =   2205
+   End
+   Begin VB.Label lbl_PRACUJI 
+      Alignment       =   2  'Center
+      BackStyle       =   0  'Transparent
+      Caption         =   "PRACUJI"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   9.75
+         Charset         =   238
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   285
+      Left            =   105
+      TabIndex        =   13
+      Top             =   1170
+      Visible         =   0   'False
+      Width           =   6465
+   End
+   Begin VB.Menu Menu_WWW 
+      Caption         =   "     WWW"
+   End
+   Begin VB.Menu Menu_O_programu 
+      Caption         =   "     O programu"
+   End
+End
+Attribute VB_Name = "Form1"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+'PO Martinově připomínkách
+'____Doba trvání základních výpočtů.txt -- zneschopněno.
+'Tlačítko cmd_ZPRACUJ při aktivním stavu je zelené.
+'Odstraněno v KWIC slovo " Výskyt", které tam bylo navíc.
+'Upraven problém v testu extrémní délky souboru.
+'Form HELP má krátký název.
+'Ze slovníku odstraněny prázdné řádky, pak celý zaktualizován.
+'Odstraněna chyba ve změnách zadání KJ a znaku (Přesunutí částí programů).
+'Odstraněna chyba ve zpracování slov - v ODSTRAŇ_ZNAKY_PRO_SLOVA - CR a LF nahrazeny mezerou.
+'Zkontroluvány a upraveny chybové hlášky.
+'Upraven test prázdných souborů (soubor nenulový, ale bez dat).
+'Upraveny zánamy a čtení Parametrů.
+'Změněna cesta k Help: v instalaci není v adresáři HELP, ale u programu.
+'Zkusmo v Helpu přidán odkaz na internet, funguje.
+
+'Změna adreářů pro instalaci:
+' Program   - cesta_k_INSTALACI$  "C:"Program Files\COOA\"               Word_co-ocurrences -232.exe
+' Help      - cesta_k_INSTALACI$  "C:"Program Files\COOA\"               Help_Word_co-ocurrences.rtf
+' Výsledky  - cesta_k_VÝSLEDKŮM$  "C:\Users\user\Documents\__COOA\"
+' Parametry - cesta_k_TEMP$       "C:\Users\user\Documents\__COOA\TEMP"  PARAMETRY.param
+' Cesta     - cesta_k_TEMP$       "C:\Users\user\Documents\__COOA\TEMP"     CESTA.cesta (vytvoří sám program)
+
+Option Base 1
+Option Explicit
+Public n1 As Long, n2 As Long                 'Pozice dvou následujících oddělovacích čárek ve slovníku
+Public Aktual_cesta$
+Public Pozadí As Long
+Public datový_soubor$                         'Název datového souboru s cestou
+Public data_název$                            'Název datového souboru s cestou
+Public cesta_souboru$
+Public cesta_slovníku$
+Public slovník_název$
+Public cesta_k_INSTALACI$                     'Odkud zpuštěn program
+Public cesta_k_VÝSLEDKŮM$
+Public cesta_k_TEMP$
+Public cesta_k_Ploše$
+Public Msg, Style, Title, Response, MyString
+Public délka_DAT_souboru As Long              'Délka vybraného datového souboru
+Public délka_original_souboru As Double       'Délka souboru
+Public délka_souboru As Double                'Délka částečně očištěného souboru: jsou ještě ?!. CR LF
+Public retezec_originál$                      'Řetězec do kterého je načten datový soubor
+Public retezec$                               'Řetězec do kterého je načten datový soubor, pak upravený
+
+Public Slov$                                  'Název slovníku
+Public řádka_slovníku$                        'Načtená celá řádka ze slovníku
+Public Počet_Synonym As Long                  'Počet synonym včetně základního slova
+Public počet_synonym_max As Long              'Počet synonym včetně základního slova
+Public číslo_synonyma As Long                 'Index synonyma v poli synonym
+Public číslo_slova As Long                    'Index základního slova ve slovníku
+Public počet_slov_ve_slovníku As Long         'Počet základních slov ve slovníku
+Dim Slovník$()                                'Pole jednotlivých synonym slov "slovník$(počet_slov,počet_synonym)"
+Dim výskyt_slov() As Boolean                  'Výskyty jednotlivých synonym jednoho slova v paketech [0,1]
+
+Dim Param$(4)                                 'Pole zadaných Parametrů na 4 řádcích v pořadí: slovo, věta, odstavec, jiný_znak
+Public počet_jednotek As Double               'Počet paketů buď slovních nebo znakových v jednotlivých částech
+Public počet_jednotek_celkem As Double        'Celkový počet paketů v souboru
+Public délka_jednotky As Long                 'Délka paketu - ve znacích nebo ve slovech
+Public datum$
+Dim počet_výskytů_celkem As Long              'Počet základních slov ve slovníku
+
+Dim konce_paketu() As Long
+Public Soubor_OK As Boolean
+Public Slovník_OK As Boolean
+Public o_počet_SLOV As Boolean
+Public o_počet_Vět As Boolean
+Public o_počet_ODSTAVCU As Boolean
+Public o_JINY_ZNAK As Boolean
+Public o_SOUBOR_VÝSLEDKY As Boolean
+Public o_FREKVENCE_SLOV As Boolean
+Public o_ABS_CETNOSTI As Boolean
+Public o_VZOREC As Boolean
+Public o_SOUBOR_KONTEXT As Boolean
+Public o_OKOLÍ As Boolean
+Public jiný_znak$
+Public počet_vzorců As Long
+Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
+Private Declare Function SHGetSpecialFolderPath Lib "shell32.dll" Alias "SHGetSpecialFolderPathA" (ByVal hwndOwner As Long, ByVal lpszPath As String, ByVal nFolder As Long, ByVal fCreate As Long) As Long
+Public T_čas As Single
+Public Výběr_KJ$    'Název typu KJ
+Dim KK$()           'Pole textů (slov, vět, odstaců, jiných) vybraných podle typu KJ (kontextové jednotky) - číslované od 0
+Dim K$()            'Pole textů (slov, vět, odstaců, jiných) vybraných podle typu KJ (kontextové jednotky) - číslované od 1 (pomocné pole)
+Dim KJ$()           'Pole Kontextových jednotek - číslované od 0 (+ zvýraznění slov ze slovníku)
+Public Doba_Trvání As Single
+Public ESC_enabled As Boolean
+
+
+
+' ##   ##   ####   ##     #####     ##          ######  ##   ##  #####   ##  ##        ##  ##     ##
+' ##   ##  ##  ##  ##     ##  ##   ####           ##    ##   ##  ##  ##  ##  ##        ## ##      ##
+' ##   ##  ##  ##  ##     #####   ##  ##          ##    ##   ##  #####   ##  ##        ####       ##
+'  ## ##   ##  ##  ##     ##  ##  ######          ##      ###    ##      ##  ##        ## ##  ##  ##
+'   ###     ####   #####  #####   ##  ##          ##      ###    ##       ####         ##  ##  ####
+'####################################################################################################################################
+
+'===== SLOVA =============================================================================
+Private Sub opt_POCET_SLOV_Click()
+Dim P$
+  Výběr_KJ$ = "slovo"
+  opt_POCET_ZNAKU.Value = False:  opt_POCET_VET.Value = False:  opt_POCET_ODSTAVCU.Value = False:  opt_JINY_ZNAK.Value = False
+ 'Zde se zadá nabídnutá délka ..................................................
+  Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1         'NAČTU defaultní/předchozí parametr ze souboru
+  Input #1, P$: Close #1                                        'Text na 4 řádcích v pořadí: slovo, věta, odstavec, jiný_znak
+  With txt_DÉLKA_JEDNOTKY: .Top = opt_POCET_SLOV.Top - 70: .Text = P$: .Visible = True: End With
+  txt_JINY_ZNAK.Visible = False
+  lbl_PRACUJI.Visible = False: lbl_PRACUJI.Refresh
+  cmd_ZPRACUJ.Visible = True
+  cmd_ZPRACUJ.Enabled = True
+  cmd_ZPRACUJ.BackColor = &H80FF80
+End Sub
+'===== VĚTY ==================================================================================
+Private Sub opt_POCET_VET_Click()
+Dim P$
+Dim i As Long
+  Výběr_KJ$ = "věta"
+  opt_POCET_ZNAKU.Value = False:  opt_POCET_SLOV.Value = False:  opt_POCET_ODSTAVCU.Value = False:  opt_JINY_ZNAK.Value = False
+ 'Zde se zadá nabídnutá délka ..............................................
+  Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1         'NAČTU defaultní/předchozí parametr ze souboru
+  Input #1, P$: Input #1, P$: Close #1                          'Text na 4 řádcích v pořadí: slovo, věta, odstavec, jiný_znak
+  With txt_DÉLKA_JEDNOTKY: .Top = opt_POCET_VET.Top - 70: .Text = P$: .Visible = True: End With
+  txt_JINY_ZNAK.Visible = False
+  lbl_PRACUJI.Visible = False: lbl_PRACUJI.Refresh
+  cmd_ZPRACUJ.Visible = True
+  cmd_ZPRACUJ.Enabled = True
+  cmd_ZPRACUJ.BackColor = &HC0FFC0
+End Sub
+
+'===== ODSTAVCE ==================================================================================
+Private Sub opt_POCET_ODSTAVCU_Click()
+Dim P$
+  Výběr_KJ$ = "odstavec"
+  opt_POCET_ZNAKU.Value = False:  opt_POCET_SLOV.Value = False:  opt_POCET_VET.Value = False:  opt_JINY_ZNAK.Value = False
+ 'Zde se zadá nabídnutá délka ......................................................................
+  Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1             'NAČTU defaultní/předchozí parametr ze souboru
+  Input #1, P$: Input #1, P$: Input #1, P$: Close #1                'Text na 4 řádcích v pořadí: slovo, věta, odstavec, jiný_znak
+  With txt_DÉLKA_JEDNOTKY: .Top = opt_POCET_ODSTAVCU.Top - 70: .Text = P$: .Visible = True: End With
+  txt_JINY_ZNAK.Visible = False
+  lbl_PRACUJI.Visible = False: lbl_PRACUJI.Refresh
+  cmd_ZPRACUJ.Visible = True
+  cmd_ZPRACUJ.Enabled = True
+  cmd_ZPRACUJ.BackColor = &HC0FFC0
+End Sub
+
+'===== JINÝ ZNAK ================================================================================
+Private Sub opt_JINY_ZNAK_Click()
+Dim P$
+  Výběr_KJ$ = "jiný_znak"
+  opt_POCET_ZNAKU.Value = False:  opt_POCET_SLOV.Value = False:  opt_POCET_VET.Value = False:  opt_POCET_ODSTAVCU.Value = False
+  Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1             'NAČTU defaultní/předchozí parametr ze souboru
+  Input #1, P$: Input #1, P$: Input #1, P$: Input #1, P$: Close #1  'Text na 4 řádcích v pořadí: slovo, věta, odstavec, jiný_znak
+  With txt_JINY_ZNAK: .Top = opt_JINY_ZNAK.Top - 70: .Text = P$: .Visible = True: End With
+  txt_DÉLKA_JEDNOTKY.Visible = False
+  lbl_PRACUJI.Visible = False: lbl_PRACUJI.Refresh
+  cmd_ZPRACUJ.Visible = True
+  cmd_ZPRACUJ.Enabled = True
+  cmd_ZPRACUJ.BackColor = &HC0FFC0  '&H8000000F&
+End Sub
+'###################################################################################################################################
+Private Sub cmd_ZPRACUJ_Click()
+  cmd_VYBER_SOUBOR.Enabled = False
+  cmd_VYBER_SLOVNIK.Enabled = False
+  opt_POCET_SLOV.Enabled = False
+  opt_POCET_VET.Enabled = False
+  opt_POCET_ODSTAVCU.Enabled = False
+  opt_JINY_ZNAK.Enabled = False
+  cmd_ZPRACUJ.BackColor = &H8000000F: cmd_ZPRACUJ.Enabled = False
+  txt_DÉLKA_JEDNOTKY.Enabled = False
+  txt_JINY_ZNAK.Enabled = False
+  Call ZPRACUJ_KONTEXTOVÉ_JEDNOTKY
+End Sub
+
+
+
+
+'                                                                             ##
+'  ##  ##   ####   ##   ##  ######  #####  ##   ##  ######  ####   ##   ##  #####          ##  #####  ####    ##   ##   ####  ###### ##  ## ##   ##
+'  ## ##   ##  ##  ###  ##    ##    ##      ## ##     ##   ##  ##  ##   ##  ##             ##  ##     ##  ##  ###  ##  ##  ##   ##   ## ##  ##   ##
+'  ####    ##  ##  ## # ##    ##    ####     ###      ##   ##  ##  ##   ##  ####           ##  ####   ##  ##  ## # ##  ##  ##   ##   ####   ##   ##
+'  ## ##   ##  ##  ##  ###    ##    ##      ## ##     ##   ##  ##   ## ##   ##         ##  ##  ##     ##  ##  ##  ###  ##  ##   ##   ## ##    ###
+'  ##  ##   ####   ##   ##    ##    #####  ##   ##    ##    ####     ###    #####       ####   #####  ####    ##   ##   ####    ##   ##  ##   ###
+'######################################################################################################################################################
+
+Sub ZPRACUJ_KONTEXTOVÉ_JEDNOTKY()
+Dim n As Double, i As Long, j As Long
+Dim a$, P$
+Dim Nmax As Double  'Délka pole
+Dim KJ_max As Long  'Maximální počet kontextových jednotek
+ 
+ cmd_VYBER_SOUBOR.Enabled = False
+ cmd_VYBER_SLOVNIK.Enabled = False
+ frm_KONTEXT_JEDNOTKA.Enabled = False
+ cmd_ZPRACUJ.Enabled = False
+  
+  ProgressBar.Visible = False
+'  Doba_Trvání = Timer
+
+  'Postup výpočtů - volání jednotlivých procedur =============================================================================
+Znovu_dělící_znak:                       'Znovu s defaultní hodnotou
+  GoSub TESTY_ZADÁNÍ
+  GoSub VYTVOŘENÍ_KJ                     '[pole KJ$(n), KJ_max]
+  GoSub VÝPOČET_ČETNOSTÍ_SLOV_A_SYNONYM  '[pole četnosti$(Slovo & jeho četnost & počet KJ s výskytem), počet_slov_ve_slovníku]
+  GoSub TABULKA_MATICE_PODOBNOSTÍ        '[pole výskyt_slov(číslo_slova, číslo_KJ), počet_slov_ve_slovníku, KJ_max]
+  GoSub VÝPOČETNÍ_VZOREC_JACCKARD        '
+  GoSub ABSOLUTNÍ_ČETNOSTI               '[pole četnosti$(Slovo & jeho četnost & počet KJ s výskytem)]
+  GoSub FREKVENCE_SLOV
+  GoSub TISK_SESTAV
+
+'Všechny KONTROLY, VÝPOČTY a ZOBRAZENÍ provedeny - ukončuji řešení XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  'Uložení aktuálně zadaných PARAMETRŮ do pole ......................................................................
+  If Výběr_KJ$ = "slovo" Then Param$(1) = txt_DÉLKA_JEDNOTKY.Text    'Ulož změnu pro typ KJ do pole
+  If Výběr_KJ$ = "věta" Then Param$(2) = txt_DÉLKA_JEDNOTKY.Text     'Ulož změnu pro typ KJ do pole
+  If Výběr_KJ$ = "odstavec" Then Param$(3) = txt_DÉLKA_JEDNOTKY.Text 'Ulož změnu pro typ KJ do pole
+  If Výběr_KJ$ = "jiný_znak" Then Param$(4) = txt_JINY_ZNAK.Text     'Ulož změnu pro typ KJ do pole
+  'Uložení aktuálně zadaných PARAMETRŮ do souboru   'Uložení aktuálně zadaných PARAMETRŮ do souboru
+
+  Open cesta_k_TEMP$ & "PARAMETRY.param" For Output As #1             'Soubor s parametry
+  For n = 1 To 4                                                     'Zapiš stav aktualizovaného pole so souboru
+    Print #1, Param$(n)
+  Next n
+  Close #1
+  
+  'Vše hotovo, skryj zobrazení o průběhu hýpočtů .................................................................
+  lbl_PRACUJI.Visible = False: lbl_PRACUJI.Refresh
+  cmd_ZPRACUJ.Visible = False
+  ProgressBar.Visible = False
+  Line3.Visible = True
+  GoTo KONEC
+ 
+ 
+TESTY_ZADÁNÍ: '====================================================================================================================
+'1 AKTUALIZACE ZADÁNÍ KJ a znaku
+  Select Case Výběr_KJ$
+   'Aktualizace KJ - zadaného počtu slov ....................................................................................
+    Case "slovo":
+      retezec$ = retezec_originál$
+      'Dělícím prvkem slov je mezera, proto vše odstraňuji
+      Call ODSTRAŇ_ZNAKY_PRO_SLOVA
+      délka_souboru = Len(retezec$): délka_jednotky = Val(txt_DÉLKA_JEDNOTKY.Text)
+      'Vložení slov do pole (číslováno od 0)
+      ProgressBar.Visible = False: ProgressBar.Refresh
+      lbl_PRACUJI.Caption = "Čekejte, dělení textu podle slov": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+      DoEvents
+      KK$() = Split(retezec$, " ")
+   'Aktualizace KJ - zadaného počtu vět ....................................................................................
+    Case "věta":
+      'Odstraním konce odstavců
+      retezec$ = retezec_originál$
+      retezec$ = Replace(retezec$, vbLf, "", , , vbBinaryCompare)   'LF
+      retezec$ = Replace(retezec$, vbCr, " ", , , vbBinaryCompare)  'CR
+      retezec$ = Replace(retezec$, "  ", " ")                       '2 MEZERY za JEDNU
+      'Odstraním vícenásobné konce vět
+      Do: retezec$ = Replace(retezec$, "..", ".")                   'Odstraním nadbytečné konce odstavců (prázdné řádky)
+        i = InStr(retezec$, "..")                                   'Pokud ještě v souboru existují (prázdné řádky), odstraňuj
+      Loop While i <> 0
+      Do: retezec$ = Replace(retezec$, "??", "?")                   'Odstraním nadbytečné konce odstavců (prázdné řádky)
+        i = InStr(retezec$, "??")                                   'Pokud ještě v souboru existují (prázdné řádky), odstraňuj
+      Loop While i <> 0
+      Do: retezec$ = Replace(retezec$, "!!", "!")                   'Odstraním nadbytečné konce odstavců (prázdné řádky)
+        i = InStr(retezec$, "!!")                                   'Pokud ještě v souboru existují (prázdné řádky), odstraňuj
+      Loop While i <> 0
+      'Konce vět nahradím oddělovačem CR - bude to oddělovací znak
+      retezec$ = Replace(retezec$, ".", vbCr, , , vbBinaryCompare)  'Vložení CR za každou .
+      retezec$ = Replace(retezec$, "!", vbCr, , , vbBinaryCompare)  'Vložení CR za každý  !
+      retezec$ = Replace(retezec$, "?", vbCr, , , vbBinaryCompare)  'Vložení CR za každý  ?
+      délka_souboru = Len(retezec$): délka_jednotky = Val(txt_DÉLKA_JEDNOTKY.Text)
+      Call UPRAV_VŠECHNY_ZNAKY
+      'Vložení vět do pole (číslováno od 0)
+      ProgressBar.Visible = False: ProgressBar.Refresh
+      lbl_PRACUJI.Caption = "Čekejte, dělení textu podle Vět": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+      DoEvents
+      KK$() = Split(retezec$, vbCr)
+      lbl_PRACUJI.Visible = False: lbl_PRACUJI.Refresh
+   'Aktualizace KJ - zadaného počtu odstavců ....................................................................................
+    Case "odstavec":
+      'Konce odstavců nahradím jen CR, kterým je dělící prvek odstavců
+      retezec$ = Replace(retezec$, vbLf, "", , , vbBinaryCompare)       'Odstraním vbLf
+      Call UPRAV_VŠECHNY_ZNAKY
+      délka_souboru = Len(retezec$): délka_jednotky = Val(txt_DÉLKA_JEDNOTKY.Text)
+      'Vložení odstavců do pole (číslováno od 0)
+      ProgressBar.Visible = False: ProgressBar.Refresh
+      lbl_PRACUJI.Caption = "Čekejte, dělení textu podle Odstavců": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+      DoEvents
+      KK$() = Split(retezec$, vbCr)
+   'Aktualizace KJ - zadaného znaku ....................................................................................
+    Case "jiný_znak":
+      jiný_znak$ = Trim(txt_JINY_ZNAK.Text):
+      Call ODSTRAŇ_ODSTAVCE
+      Call UPRAV_VŠECHNY_ZNAKY
+      délka_souboru = Len(retezec$): délka_jednotky = 1                 'Val(txt_DÉLKA_JEDNOTKY.Text)
+      'Vložení textů do pole (číslováno od 0)
+      ProgressBar.Visible = False: ProgressBar.Refresh
+      lbl_PRACUJI.Caption = "Čekejte, dělení textu podle Jiného znaku": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+      DoEvents
+      KK$() = Split(retezec$, jiný_znak$, -1)
+  End Select
+  
+'2 TESTY zadáných hodnot ------------------------------------------------------------------------------
+  'TEST zadané délky KJ ..............................................................................
+  If Výběr_KJ$ = "slovo" Or Výběr_KJ$ = "věta" Or Výběr_KJ$ = "odstavec" Then
+    délka_jednotky = Val(txt_DÉLKA_JEDNOTKY.Text)
+    If délka_jednotky <= 0 Then
+      Title = " Chyba v zadání délky kontextové jednotky"                       'Definice nadpisu informačního okna
+      Msg = vbCrLf
+      Msg = Msg & "Délka jednotky nesmí být nulová nebo záporná!        " & vbCrLf & vbCrLf
+      Msg = Msg & "Délka bude nahrazena defaultním / předchozím zadáním " & vbCrLf
+      Style = vbOKOnly + vbCritical                                             'Definice tlačítek
+      Response = MsgBox(Msg, Style, Title)                                      'Zobrazení zprávy
+      Select Case Výběr_KJ$
+        Case "slovo":    Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1  'Načtu parametr, KJ slova
+                         Input #1, P$: Close #1
+                         délka_jednotky = Val(P$): txt_DÉLKA_JEDNOTKY.Text = P$
+        Case "věta":     Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1  'Načtu parametr, KJ věty
+                         Input #1, P$: Input #1, P$: Close #1
+                         délka_jednotky = Val(P$): txt_DÉLKA_JEDNOTKY.Text = P$
+        Case "odstavec": Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1  'Načtu parametr, KJ odstavce
+                         Input #1, P$: Input #1, P$: Input #1, P$: Close #1
+                         délka_jednotky = Val(P$): txt_DÉLKA_JEDNOTKY.Text = P$
+      End Select
+      GoTo Znovu_dělící_znak                                                     'Znovu s defaultní délkou
+    End If
+  End If
+  
+  'TEST NEzadaného Jiného znaku  ..............................................................................
+  If Výběr_KJ$ = "jiný_znak" Then
+    If txt_JINY_ZNAK.Text = "" Then
+      Title = " Chyba v zadání dělícího znaku"                                  'Definice nadpisu informačního okna
+      Msg = vbCrLf
+      Msg = Msg & "Dělící znak nebyl zadán!" & vbCrLf & vbCrLf
+      Msg = Msg & "Znak bude nahrazen defaultním / předchozím zadáním" & vbCrLf
+      Style = vbOKOnly + vbCritical                                             'Definice tlačítek
+      Response = MsgBox(Msg, Style, Title)                                      'Zobrazení zprávy
+      Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1                    'Načtu parametr, znak
+      Input #1, P$: Input #1, P$: Input #1, P$: Input #1, P$: Close #1
+      délka_jednotky = Val(P$): txt_JINY_ZNAK.Text = P$
+      GoTo Znovu_dělící_znak                                                    'Znovu s defaultním znakem
+    End If
+  End If
+Return
+
+
+VYTVOŘENÍ_KJ: 'KONTEXTOVÉ JEDNOTKY =====================================================================================================================
+ 'Náhrada oddělovacího znaku v kontextových jednotkách
+  ProgressBar.Min = 0
+  ProgressBar.Visible = False
+  lbl_PRACUJI.Caption = "Čekejte, vytvářím kontextové jednotky": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+ 'Převod číslování v poli v KK$() od 0 --> na od 1 do K$() a vložení "oddělovacího" znaku
+  n = UBound(KK$, 1) + 1
+  ReDim K$(n)
+  For n = UBound(KK$, 1) + 1 To 1 Step -1: K$(n) = KK$(n - 1) & a$: Next n
+  Erase KK$()                                     'Odstraním pole z paměti
+  Nmax = UBound(K$, 1)                            'Počet "prvků"
+ 
+ 'Výpočet budoucího počtu KJ zaokrouhlením dolů ..........................................................
+  'Test velikosti zadané KJ
+  If Nmax - 1 <= délka_jednotky Then
+    If Výběr_KJ$ = "jiný_znak" Then
+     'Chyba v dělícím znaku
+      Title = " Chyba v zadání dělícího znaku"    'Definice nadpisu informačního okna
+      Msg = vbCrLf
+      Msg = Msg & "Zadaný dělící znak nebyl v datech nalezen." & vbCrLf & vbCrLf
+      Msg = Msg & "Z rozpracovaných výpočtů se již nelze vrátit." & vbCrLf
+      Msg = Msg & "Program bude ukončen."
+      Style = vbOKOnly + vbCritical               'Definice tlačítek
+      Response = MsgBox(Msg, Style, Title)        'Zobrazení zprávy
+      ChDrive Left$(cesta_k_INSTALACI$, 1)
+      ChDir cesta_k_INSTALACI$
+      End
+    Else
+     'Chyba v délce kontextové jednotky
+      Title = " Chyba v zadání délky kontextové jednotky"    'Definice nadpisu informačního okna
+      Msg = vbCrLf
+      Msg = Msg & "Zadaná délka kontextové jednotky je větší než délka datového souboru!        " & vbCrLf & vbCrLf
+      Msg = Msg & "Maximální možná délka jednotky je  " & Nmax - 2 & "." & vbCrLf
+      Msg = Msg & "Z rozpracovaných výpočtů se již nelze vrátit." & vbCrLf & vbCrLf
+      Msg = Msg & "Program bude ukončen."
+      Style = vbOKOnly + vbCritical               'Definice tlačítek
+      Response = MsgBox(Msg, Style, Title)        'Zobrazení zprávy
+      ChDrive Left$(cesta_k_INSTALACI$, 1)
+      ChDir cesta_k_INSTALACI$
+      End
+    End If
+  Else
+    'Výpočet velikosti KJ při zadání v toleranci
+    If Nmax / délka_jednotky - Int(Nmax / délka_jednotky) = 0 Then
+      KJ_max = Int(Nmax / délka_jednotky) - 1
+    Else
+      KJ_max = Int(Nmax / délka_jednotky)
+    End If
+  End If
+  
+  Open cesta_k_TEMP$ & "___Kontextová_jednotka.pqr" For Output As #5 'Soubor s kontextovými jednotkami (KJ)
+  Print #5, "    Poznámka: Slova ze slovníku jsou zvýrazněna"
+  Print #5,
+  ProgressBar.Max = KJ_max
+  ProgressBar.Visible = True
+  
+  počet_jednotek = 1
+  Do                                                      'Probírám všchny nalezené "prvky" (budu je třídit do KJ)
+    ProgressBar.Value = počet_jednotek
+    ReDim Preserve KJ$(počet_jednotek)                    'Připravím pole pro výsledné KJ
+    a$ = ""
+    'Vytvoření a uložení KONTEXTOVÝCH jednotek KJ do pole KJ$(počet_jednotek) + zvýraznění slov ze slovníku ................
+    'Pole KJ$(počet_jednotek)
+    '  číslo KJ   |  text KJ jednotky
+    '-------------+--------------------+
+    '     1       | tttttttttttttttttt |
+    '     2       | tttttttttttttttttt |
+    'počet_jedntek| tttttttttttttttttt |
+    '             +--------------------+
+    'Postupný výběr zadaného počtu záznamů z K$() do kontextových jednotek KJ$()
+    For n = 1 + (počet_jednotek - 1) * délka_jednotky To počet_jednotek * délka_jednotky 'Vybírán "prvky" v počtu KJ
+      a$ = a$ & K$(n) & " "                               'Postupně se s kumulací slov "posouvám" ve "prvcích"
+    Next n
+    a$ = " " & a$
+    ReDim četnosti$(počet_slov_ve_slovníku)
+    
+    'Zvýraznění (UCase) slov ze slovníku v kontextové jednotce
+    For číslo_slova = 1 To počet_slov_ve_slovníku         'Postupně všechny řádky ve slovníku
+      For číslo_synonyma = 1 To počet_synonym_max         'Postupně všechna synonyma na řádku
+        DoEvents                                          'Poskytnutí času jiným procesům.
+        'V kontext. jednotce nahradím        "slovo ze slovníku"                  "SLOVEM ZE SLOVNÍKU"
+        a$ = Replace$(a$, LCase(Slovník$(číslo_slova, číslo_synonyma)), Slovník$(číslo_slova, číslo_synonyma))  'Nastav Ucase u sudých
+        a$ = Replace$(a$, LCase(Slovník$(číslo_slova, číslo_synonyma)), Slovník$(číslo_slova, číslo_synonyma))  'Nastav Ucase u sudých
+      Next číslo_synonyma
+    Next číslo_slova
+  
+    Print #5, Trim(počet_jednotek) & ": ";                'Tisknu pořadové číslo KJ
+    a$ = Replace(a$, vbLf, "", 1, , vbBinaryCompare)      'Odstraním LF z textu
+    Do
+      a$ = Replace(a$, "  ", " "):                        '2 mezery nahradím jednou mezerou
+      i = InStr(a$, "  ")                                 'Pokud ještě v souboru existují dvě mezery, nahraď
+      If i = 0 Then Exit Do                               'Už nikde nejsou dvě mezery, konec
+    Loop
+        
+    KJ$(počet_jednotek) = a$
+    Print #5, a$                                          'Tisknu vybrané "prvky" v počtu KJ
+    Print #5,                                             'Mezera mezi KJ
+    počet_jednotek = počet_jednotek + 1                   'Posunu se do další KJ
+    If počet_jednotek > KJ_max Then Exit Do               'Je-li počet_jednotek > KJ_max, tak konec
+  Loop
+  Close #5
+  Erase K$()                                              'Odstraním pole z paměti
+Return
+ 
+ 
+VÝPOČET_ČETNOSTÍ_SLOV_A_SYNONYM: 'FREKVENCE SLOV =====================================================================================================
+ 'Výpočet ČETNOSTÍ SLOV a synonym ze slovníku v celém textu retezec$ - PRVNÍ ČÁST
+  'Pole četnosti$(Slovo & jeho četnost & počet KJ s výskytem)
+  ' číslo slova|slovo TAB četnost TAB počet KJ s výskytem|
+  '------------+-----------------------------------------+
+  '       1    |  X   TAB    X   TAB                     |
+  '       2    |  X   TAB    X   TAB                     |
+  '       3    |  X   TAB    X   TAB                     |
+  '       .    |  X   TAB    X   TAB                     |
+  '       .    |  X   TAB    X   TAB                     |
+  ' počet_slov |  X   TAB    X   TAB                     |
+  '     ve_    +-----------------------------------------+
+  '  slovníku
+  ProgressBar.Min = 0
+  ProgressBar.Max = 2 * počet_slov_ve_slovníku
+  ProgressBar.Visible = True
+  lbl_PRACUJI.Caption = "Čekejte, počítám frekvence slov": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+
+  ReDim četnosti$(počet_slov_ve_slovníku)
+  počet_výskytů_celkem = 0
+  For číslo_slova = 1 To počet_slov_ve_slovníku                    'Pro všechna slova
+    ProgressBar.Value = číslo_slova
+    i = 0                                                          'Poloha v retezci$
+    n = 0                                                          'Nuluji počet výskytů slov
+    For číslo_synonyma = 1 To počet_synonym_max                    'Pro všechna synonyma slov
+      If Slovník$(číslo_slova, číslo_synonyma) = "" Then Exit For  'Při prázdném synonymu přeskoč
+      For počet_jednotek = 1 To KJ_max
+        a$ = KJ$(počet_jednotek)
+        Do
+          i = InStr(i + 1, LCase(a$), LCase(Slovník$(číslo_slova, číslo_synonyma))) 'Posunuj se v retezec$ a testuj výskyt synonyma
+          If i <> 0 Then
+           'Sumarizace četností výskytů slov ve slovníku na jednom řádku (tedy včetně synonym)
+            n = n + 1
+            počet_výskytů_celkem = počet_výskytů_celkem + 1        'Budu to potřebovat pro výpočet procent
+          Else
+            Exit Do
+          End If
+        Loop
+      Next počet_jednotek
+    Next číslo_synonyma
+    'ULOŽENÍ četností výskytů do pole
+    četnosti$(číslo_slova) = Slovník$(číslo_slova, 1) & Chr(9) & n
+  Next číslo_slova
+ 
+ 'Výpočet ČETNOSTÍ KJ, ve kterých jsou slova ze slovníku - DOPLNĚNÍ POLE
+  'Pole četnosti$(Slovo & jeho četnost & počet KJ s výskytem)
+  ' číslo slova|slovo TAB četnost TAB počet KJ s výskytem|
+  '------------+-----------------------------------------+
+  '       1    |  X   TAB    X   TAB        Z            |
+  '       2    |  X   TAB    X   TAB        Z            |
+  '       3    |  X   TAB    X   TAB        Z            |
+  '       .    |  X   TAB    X   TAB        Z            |
+  '       .    |  X   TAB    X   TAB        Z            |
+  ' počet_slov |  X   TAB    X   TAB        Z            |
+  '     ve_    +-----------------------------------------+
+  '  slovníku
+  For číslo_slova = 1 To počet_slov_ve_slovníku                       'Pro všechna slova ve slovníku
+  ProgressBar.Value = číslo_slova + počet_slov_ve_slovníku
+    i = 0                                                             'Nuluji počet nálezů pro dané slovo
+    For n = 1 To KJ_max
+      a$ = KJ$(n)                                                     'Z pole KJ vybírám postupně jednotky
+      'Postupně zjišťuji, zda v KJ jsou synonyma pro slova na řádku: "synonymum=1
+      For číslo_synonyma = 1 To počet_synonym_max
+        If Trim(Slovník$(číslo_slova, číslo_synonyma)) = "" Then Exit For
+        If InStr(a$, Slovník$(číslo_slova, číslo_synonyma)) <> 0 Then 'Je v ní slovo z řádku slovníku?
+          i = i + 1                                                   'Slovo bylo v KJ nalezeno, už dál synonyma na řádku nehledám
+          Exit For
+      End If
+      Next číslo_synonyma                                             'Jinak prohledávám pro další synonymum
+    Next n                                                            'Jdu vzít další KJ a v ní zase hledám sybonyma
+    'Všechny KJ byly pro dané slovo "číslo_synonyma" prohledány
+    četnosti$(číslo_slova) = četnosti$(číslo_slova) & Chr(9) & i
+  Next číslo_slova
+Return
+    
+    
+TABULKA_MATICE_PODOBNOSTÍ: 'MATICE PODOBNOSTÍ ==========================================================================================================
+'Tabulka je pro výpočty matice koeficientů podobností
+  'POLE  vyskyt_slov(číslo_slova,počet_KJ)
+  '  x = True / False
+  '          | 1   2   3   4   5   .   .   počet_KJ
+  '----------+---+---+---+---+---+---+---+---------+
+  '     1    | x | x | x | x | x | . | . |    x    |
+  '     2    | x | x | x | x | x | . | . |    x    |
+  '     3    | x | x | x | x | x | . | . |    x    |
+  '     .    | x | x | x | x | x | . | . |    x    |
+  '     .    | x | x | x | x | x | . | . |    x    |
+  'počet_slov| x | x | x | x | x | . | . |    x    |
+  '          +---+---+---+---+---+---+---+---------+
+  
+Dim výskyt_slov()                                         'Výskyty jednotlivých synonym jednoho slova (jedna řádka slovníku)
+ReDim výskyt_slov(počet_slov_ve_slovníku, KJ_max)         'Výskyty jednotlivých synonym jednoho slova (jedna řádka slovníku)
+Dim číslo_KJ As Long
+Dim nalezl As Boolean
+Dim n1 As Long
+  'Pro všechna slova ...................................
+  ProgressBar.Min = 0
+  ProgressBar.Max = počet_slov_ve_slovníku
+  ProgressBar.Visible = True
+  lbl_PRACUJI.Caption = "Čekejte, počítám matici podobností": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+  
+  For číslo_slova = 1 To počet_slov_ve_slovníku           'Pro všechna slova
+    ProgressBar.Value = číslo_slova
+    DoEvents
+    'Pro všechny KJ ....................................
+    For číslo_KJ = 1 To KJ_max 'počet_jednotek            'Pro jednotlivé  KJ
+      a$ = KJ$(číslo_KJ)
+      nalezl = False                                      'Flag nalezení
+      'Pro všechna synonyma slova ......................
+      For číslo_synonyma = 1 To počet_synonym_max         'Pro jednotlivá synonyma
+        'HLEDEJ výskyt
+        If Slovník$(číslo_slova, číslo_synonyma) = "" Then Exit For     'Jsem na konci řádku slovníku, jdu na další
+        n = InStr(KJ$(číslo_KJ), Slovník$(číslo_slova, číslo_synonyma)) 'Hledej jeho výskyt
+        If n <> 0 Then
+          nalezl = True                                   'Nastav nalezení
+          Exit For                                        'Nalezl-li jsi ho, další synonyma už nehledej
+        End If
+      Next číslo_synonyma                                 'Další synonymum
+      If nalezl = True Then
+        výskyt_slov(číslo_slova, číslo_KJ) = True         'Zapiš výsledek do pole (kladný)
+      Else
+        výskyt_slov(číslo_slova, číslo_KJ) = False        'Zapiš výsledek do pole (záporný)
+      End If
+    Next číslo_KJ                                         'Další KJ
+  Next číslo_slova                                        'Další slovo
+Return
+
+
+VÝPOČETNÍ_VZOREC_JACCKARD: 'VZOREC JACCKARD ============================================================================================================
+'VÝPOČETNÍ VZOREC JACCKARD
+Dim b As Long, c As Long
+Dim Srs$
+  
+'EXCEL - vodorovné řádky z prvních slov z řádků slovníku (tedy bez synonym)
+Dim pE$()
+ReDim pE$(počet_slov_ve_slovníku)
+Dim SL$
+  'EXEL
+  Open cesta_k_TEMP$ & "___Excel.csv" For Output As #33
+  Print #33, ";";                                     'Vlož slovo do buňky v řádku EXELu a připrav další buňku
+  Open Slov$ For Input As #1                          'Otevři soubor slovníku
+  For číslo_slova = 1 To počet_slov_ve_slovníku       'Pro všechny řádky ve slovníku
+    Line Input #1, a$                                 'Načti celou řádku
+    SL$ = Replace(a$, "*", "")                        'Odstraň "*" - sl$ je čistá řádka
+    n = InStr(SL$, ",")                               'Najdi konec prvního slova v řádku
+    If n = 0 Then
+      'Samotné slovo na řádku slovníku
+      If číslo_slova < počet_slov_ve_slovníku Then    'Pokud není konec slovníku
+        Print #33, SL$; ";";                          'Vlož slovo do buňky v řádku EXELu a připrav další buňku
+        pE$(číslo_slova) = SL$                        'Slovo si ulož do pole pro tisk na další řádky
+      Else
+        Print #33, SL$                                'Vlož poslední samostatné slovo do buňky v řádku EXELu
+        pE$(číslo_slova) = SL$                        'Slovo si ulož do pole pro tisk na další řádky
+      End If
+    Else
+      'Na řádku je více slov, synonym
+      If číslo_slova < počet_slov_ve_slovníku Then    'Pokud není konec slovníku
+        Print #33, Left(SL$, n - 1); ";";             'Z řádky vyberu jen první slovo a vložím ho a připravím další buňku
+        pE$(číslo_slova) = Left(SL$, n - 1)           'Slovo si ulož do pole pro tisk na další řádky
+      Else
+        Print #33, Left(SL$, n - 1)                   'Vlož poslední slovo do buňky v řádku EXELu
+        pE$(číslo_slova) = Left(SL$, n - 1)           'Slovo si ulož do pole pro tisk na další řádky
+      End If
+    End If
+  Next číslo_slova
+  Close #1
+  
+  Open cesta_k_TEMP$ & "___Vypocetni vzorec Jacckard.pqr" For Output As #11
+  ProgressBar.Min = 0
+  ProgressBar.Max = počet_slov_ve_slovníku
+  ProgressBar.Visible = True
+  lbl_PRACUJI.Caption = "Čekejte, vyčísluji vzorec Jacckard": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+  For číslo_slova = 1 To počet_slov_ve_slovníku
+    ProgressBar.Value = číslo_slova
+    Print #33, pE$(číslo_slova); ";";
+    DoEvents                                          'Poskytnutí času jiným procesům.
+    For n2 = 1 To číslo_slova                         'Pro slova od 1. do číslo_slova
+      a = 0: b = 0: c = 0
+     'Výpočet konstant a, b, c
+      For číslo_KJ = 1 To KJ_max                      'Pro každou KJ
+        If výskyt_slov(číslo_slova, číslo_KJ) = True And výskyt_slov(n2, číslo_KJ) = True Then a = a + 1
+        If výskyt_slov(číslo_slova, číslo_KJ) = True And výskyt_slov(n2, číslo_KJ) = False Then b = b + 1
+        If výskyt_slov(číslo_slova, číslo_KJ) = False And výskyt_slov(n2, číslo_KJ) = True Then c = c + 1
+      Next číslo_KJ
+      Srs$ = "0.00000"
+      If a + b = 0 Or a + c = 0 Then Srs$ = "0.00000"
+     'Jaccard
+      If a + b + c <> 0 Then Srs$ = Trim$(Str$(Round(a / (a + b + c), 5)))  'Číslo převedu na text
+      Srs$ = Format(Val(Srs$), "#0.00000")            'Formátuji text na vždy 5 desetinných čísel
+      Srs$ = Replace(Srs$, ".", ",")                  'Desetinné tečky nahradím čárkami
+      Print #(11), Srs$; Chr(9);                      'Tisknu do textu s tabulátory
+      Print #33, Srs$; ";";                           'Tisknu do Exelu se středníky
+    Next n2
+    Print #11,
+    Print #33,                                        'Další řádka tabulky csv
+  Next číslo_slova                                    'Další slovo
+  Close #11
+  Close #33
+Return
+
+
+ABSOLUTNÍ_ČETNOSTI: 'ABSOLUTNÍ VZDÁLENOSTI ============================================================================================================
+'Výpočet ABSOLUTNÍCH ČETNOSTÍ
+  Open cesta_k_TEMP$ & "___Absolutni vzdalenosti.pqr" For Output As #11
+  ProgressBar.Min = 0
+  ProgressBar.Max = počet_slov_ve_slovníku
+  ProgressBar.Visible = True
+  lbl_PRACUJI.Caption = "Čekejte, počítám absolutní vzdálenosti slov": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+  
+  For číslo_slova = 1 To počet_slov_ve_slovníku       'Pro všechna slova ze slovníku (1. slova na řádku)
+    ProgressBar.Value = číslo_slova
+    Print #11, " "; pE$(číslo_slova); ":"; Tab(20);   'Vlkádám na začátek řádku název slova (pole z Excelu)
+    For n2 = 1 To číslo_slova                         'Pro slova od 1. do číslo_slova
+      a = 0
+      For číslo_KJ = 1 To KJ_max                      'Postupně prohlížím KJ
+        'Postupně prohlížím kontextové jednotky
+        DoEvents
+        'Vyskytuje-li se pro danou KJ
+        If výskyt_slov(číslo_slova, číslo_KJ) = True And výskyt_slov(n2, číslo_KJ) = True Then a = a + 1
+      Next číslo_KJ
+      Print #11, Trim$(Str$(a)); Tab(20 + n2 * 4);    'Další hodnoty tisknu v odstupech synonym n2*3
+    Next n2
+    Print #11,                                        'Další řádek
+  Next číslo_slova
+  Close #11
+Return
+
+
+FREKVENCE_SLOV: '========================================================================================================================================
+ 'VÝPOČET a tisk Tabulky frekvencí slov
+Dim procenta_celkem As Single
+Dim Z As Long
+Dim X As Single
+Dim aa$
+Dim Slovo$, Četnost_slova$, Četnost_KJ$
+Dim o As Long
+
+  procenta_celkem = 0
+  Open cesta_k_TEMP$ & "___Frekvence slov.txt" For Output As #10
+  Print #10,
+  Print #10, " Výskyty slov v kontextových jednotkách"
+ 'TABULKA ...........................................................................................................
+  o = 2
+  Print #10, " "; "+---------------------+------------+------------+----------+--------+"
+  Print #10, " "; "|                     |  Výskyty   |  Výskyty v |   % v    |   % v  |"
+  Print #10, " "; "|                     |  celkem    | jednotkách |jednotkách|  celku |"
+  Print #10, " "; "+---------------------+------------+------------+----------+--------+"
+                 ' | KUTÁLELI            |        10  |         5  |     50%  |    50% |
+                 ' |*CHODÍ*              |         7  |         5  |  71,43%  |    35% |
+                 ' +---------------------+------------+------------+----------+--------+
+                 '     SUMA VÝSKYTŮ:         20                                 100%
+  Open Slov$ For Input As #66
+  For n = 1 To počet_slov_ve_slovníku
+   'SLOVA A ČETNOSTI ...................................................................................................
+    DoEvents
+    a$ = četnosti$(n) 'četnosti$(Slovo + jeho četnost + počet KJ s výskytem)
+    i = InStr(a$, Chr(9))
+    Slovo$ = Left(a$, i - 1)
+    If Left(Slovo$, 1) <> " " Then Slovo$ = "*" & Slovo$  'Přidám hvězdičkovou konvence
+    If Right(Slovo$, 1) <> " " Then Slovo$ = Slovo$ & "*" 'Přidám hvězdičkovou konvence
+    
+    Line Input #66, aa$
+    If InStr(aa$, ",") <> 0 Then Slovo$ = Slovo$ & "..."
+    
+    j = InStr(i + 1, a$, Chr(9))
+    Četnost_slova$ = Mid(a$, i + 1, j - i - 1)
+    Četnost_KJ$ = Right(a$, Len(a$) - j)
+   'Tisk základního slova
+    Print #10, " "; "|"; Slovo$;
+   'Tisk - Výskyty slova celkem
+    Print #10, Tab(22 + o); "|"; Tab(27 + o); String$(6 - Len(Četnost_slova$), " "); Četnost_slova$;
+   'Tisk - Výskyty v jednotkách
+    Print #10, Tab(35 + o); "|"; Tab(40 + o); String$(6 - Len(Četnost_KJ$), " "); Četnost_KJ$;
+  'PROCENTA ............................................................................................................
+   'Test dělení nulou
+    If Četnost_slova$ = "0" Then X = Round(0, 2) Else X = Round(100 * Val(Četnost_KJ$) / Val(Četnost_slova$), 2)
+    aa$ = Trim$(Replace(Str$(X), ".", ","))
+    Print #10, Tab(48 + o); "|"; Tab(51); String$(6 - Len(aa$), " "); aa$; "%";
+   'Test dělení nulou
+    If Len(Četnost_slova$) = 0 Then X = Round(0, 2) Else X = Round(100 * Val(Četnost_slova$) / počet_výskytů_celkem, 2)
+    procenta_celkem = procenta_celkem + X
+    aa$ = Trim$(Replace(Str$(X), ".", ","))
+    Print #10, Tab(59 + o); "|"; Tab(61 + o); String$(5 - Len(aa$), " "); aa$; "% |";
+    Print #10,
+  Next n
+  Close #66
+ 'ZÁVĚREČNÉ SUMY ........................................................................................................
+  Print #10, " "; "+---------------------+------------+------------+----------+--------+"
+  aa$ = Trim$(Replace(Str$(Round(procenta_celkem, 0)), ".", ","))
+      Print #10, "     SUMA VÝSKYTŮ:        ";
+      Print #10, počet_výskytů_celkem;
+      Print #10, "                              "; String$(5 - Len(aa$), " "); aa$; "%"
+  Close #10
+Return
+
+
+
+
+'  ###### ##  ####   ##  ##       ####   #####   ####  ######   ##   ##   ##
+'    ##   ## ##      ## ##       ##      ##     ##       ##    ####  ##   ##
+'    ##   ##  ####   ####         ####   ####    ####    ##   ##  ## ##   ##
+'    ##   ##     ##  ## ##           ##  ##         ##   ##   ######   ###
+'    ##   ##  ####   ##  ##       ####   #####  ####     ##   ##  ##   ###
+'####################################################################################################################################
+TISK_SESTAV:
+ 'HLAVIČKA =============================================================================================================================================
+  datum$ = Mid$(Date$, 4, 2) & "." & Left$(Date$, 2) & "." & Right$(Date$, 4) & "    " & Time$
+  o = 34 '42 ' 37
+  Open cesta_k_TEMP$ & "\Hlavička.txt" For Output As #1
+  Print #1, "--------------------------------------------------------------------------------------"
+  Print #1, "Zpracováno dne:"; Tab(o); datum$
+  Print #1, "Datový soubor (txt):"; Tab(o); data_název$
+  Print #1, "Soubor slovníku (slv):"; Tab(o); slovník_název$
+  Print #1, "Počet slov - řádků ve slovníku:"; Tab(o - 1); počet_slov_ve_slovníku
+  If Výběr_KJ$ = "jiný_znak" Then
+    Print #1, "Typ kontextové jednotky/počet:"; Tab(o); Výběr_KJ$; "("; txt_JINY_ZNAK.Text; ")"; " /"; Nmax - 1 'délka_jednotky
+  Else
+    Print #1, "Typ kontextové jednotky/počet:"; Tab(o); Výběr_KJ$; "/"; délka_jednotky
+  End If
+  Print #1, "Počet kontextových jednotek:"; Tab(o - 1); KJ_max
+  Print #1, ""
+  Close #1
+
+'KONTEXTOVÉ JEDNOTKY ==================================================================================================================================
+  Open cesta_k_VÝSLEDKŮM$ & "kontext - jednotky.txt" For Output As #1
+  Print #1, Tab(10); "KONTEXTOVÉ JEDNOTKY"
+  Print #1,
+  Open cesta_k_TEMP$ & "\Hlavička.txt" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Print #1,
+  Close #2
+  Open cesta_k_TEMP$ & "___Kontextová_jednotka.pqr" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Close #2
+  Close #1
+   
+'FREKVENCE SLOV ========================================================================================================================================
+  Open cesta_k_VÝSLEDKŮM$ & "frekvence - slov.txt" For Output As #1
+  Print #1, Tab(10); "FREKVENCE SLOV"
+  Print #1,
+  Open cesta_k_TEMP$ & "\Hlavička.txt" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Print #1,
+  Close #2
+  Open cesta_k_TEMP$ & "___Frekvence slov.txt" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Close #2
+  Close #1
+
+'ABSOLUTNÍ ČETNOSTI SLOV ===============================================================================================================================
+  Open cesta_k_VÝSLEDKŮM$ & "abs - distance.txt" For Output As #1
+  Print #1, Tab(10); "ABSOLUTNÍ ČETNOSTI"
+  Print #1,
+  Open cesta_k_TEMP$ & "\Hlavička.txt" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Print #1,
+  Close #2
+  Open cesta_k_TEMP$ & "___Absolutni vzdalenosti.pqr" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Close #2
+  Close #1
+
+'VÝPOČETNÍ VZORCE ======================================================================================================================================
+  Open cesta_k_VÝSLEDKŮM$ & "num - distance.txt" For Output As #1
+  Open cesta_k_VÝSLEDKŮM$ & "num - distance.csv" For Output As #3
+  Print #1, Tab(10); "NORMALIZOVANÉ VZDÁLENOSTI (JACCKARD)"
+  Print #1,
+  Open cesta_k_TEMP$ & "\Hlavička.txt" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Print #1,
+  Close #2
+  Open cesta_k_TEMP$ & "___Vypocetni vzorec Jacckard.pqr" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Close #2
+  Close #1
+  Open cesta_k_TEMP$ & "___Excel.csv" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #3, a$
+  Loop
+  Close #2
+  Close #3
+Return
+
+KONEC:
+'Print #13, Timer - Doba_Trvání
+'Close #13
+
+  If Dir$(cesta_k_TEMP$ & "*.pqr", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.pqr"
+  If Dir$(cesta_k_TEMP$ & "*.txt", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.txt"
+  If Dir$(cesta_k_TEMP$ & "*.dat", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.dat"
+  If Dir$(cesta_k_TEMP$ & "*.csv", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.csv"
+
+  ChDrive Left$(cesta_k_INSTALACI$, 1)
+  ChDir cesta_k_INSTALACI$
+  frm_VÝSLEDKY.Visible = True
+  lbl_CESTA_VÝSLEDKY.Caption = "Uložení výsledků: " & cesta_k_VÝSLEDKŮM$
+  
+  'Ulož aktuální PARAMETRY
+  Open cesta_k_TEMP$ & "PARAMETRY.param" For Output As #1             'Soubor s parametry
+  For n = 1 To 4                                                     'Zapiš stav aktualizovaného pole so souboru
+    Print #1, Param$(n)
+  Next n
+  Close #1
+  
+  cmd_NOVÉ_ZADÁNÍ.Visible = True
+End Sub
+'######################################################################################################################
+Private Sub cmd_NOVÉ_ZADÁNÍ_Click()
+ 'Odstranění pomocných souborů v TEMP
+  Close
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.pqr", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.pqr"
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.txt", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.txt"
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.dat", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.dat"
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.csv", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.csv"
+  Call Form_Load
+End Sub
+
+
+
+
+'                                                         ##                   ##                                     ##
+'######  ####  #####  #####    ##   ###### ##### ##   ## ##         ##   ## ##  ##  ####  ##    ##### #####  ##  ## ##  ##
+'   ##  ##  ## ##  ## ##  ##  ####     ##  ##    ###  ## ##         ##   ## ##  ## ##     ##    ##    ##  ## ## ##  ##  ##
+'  ##   ##  ## #####  #####  ##  ##   ##   ####  ## # ## ##         ##   ## ##  ##  ####  ##    ####  ##  ## ####   ##  ##
+' ##    ##  ## ##  ## ## ##  ######  ##    ##    ##  ### ##          ## ##   ###       ## ##    ##    ##  ## ## ##  ##  ##
+'######  ####  #####  ##  ## ##  ## ###### ##### ##   ## ##           ###    ###    ####  ##### ##### #####  ##  ##  ####
+'############################################################################################################################
+ 
+'######################################################################################################################
+Private Sub cmd_KONTEXTOVÉ_JEDNOTKY_Click()
+Dim e
+  e = Shell("C:\windows\notepad.exe " & cesta_k_VÝSLEDKŮM$ & "\" & "Kontext - jednotky.txt", vbNormalFocus)
+End Sub
+'######################################################################################################################
+Private Sub cmd_FREKVENCE_SLOV_Click()
+Dim e
+  e = Shell("C:\windows\notepad.exe " & cesta_k_VÝSLEDKŮM$ & "\" & "Frekvence - slov.txt", vbNormalFocus)
+End Sub
+'######################################################################################################################
+Private Sub cmd_OKOLÍ_SLOV_Click()
+'OKOLÍ má samostatný výpočet xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  'OKOLÍ je vybíráno z originálního textu, odstraněno je jen vbCrLf a mezery navíc
+  'DOTAZ na nutnost dlouhotrvajícího výpočtu OKOLÍ
+  
+  cmd_KONTEXTOVÉ_JEDNOTKY.Enabled = False
+  cmd_FREKVENCE_SLOV.Enabled = False
+  cmd_OKOLÍ_SLOV.Enabled = False
+  cmd_ABSOLUTNÍ_VZDÁLENOSTI.Enabled = False
+  cmd_VZOREC_TXT.Enabled = False
+  cmd_VZOREC_CSV.Enabled = False
+  cmd_NOVÉ_ZADÁNÍ.Enabled = False
+  cmd_NOVÉ_ZADÁNÍ.Enabled = False
+
+  Title = "  Výpočet Okolí slov"                    'Definice nadpisu - zde pořadí libovolné.
+  Msg = " Pozor!" & vbCrLf                          'Definice zprávy.
+  Msg = Msg & " V případě většího datového souboru a rozsáhlejšího slovníku může výpočet trvat velmi dlouho. " & vbCrLf & vbCrLf 'Definice zprávy.
+  Msg = Msg & " Již spuštěný výpočet lze ukončit stiskem Esc." & vbCrLf & vbCrLf
+  Msg = Msg & "         Chcete pokračovat?"         'Definice zprávy.
+  Style = vbYesNo + vbCritical                      'Definice tlačítek.
+  'Zobrazení zprávy.
+  Response = MsgBox(Msg, Style, Title)              'Nutno dodržet pořadí !!!
+  If Response = vbYes Then                          'Uživatel klepl na tlačítko Yes.
+    GoTo Pokračuj                                   'Provedení akce.
+  Else                                              'Uživatel klepl na tlačítko No.
+    ESC_enabled = True
+  End If
+
+Pokračuj:
+  Dim n1  As Long, n2  As Long, délka_okolí As Long, číslo_slova As Long, číslo_synonyma As Long
+  Dim SL$, a$
+  Dim nalezl As Boolean
+
+  délka_okolí = 50
+  Open cesta_k_TEMP$ & "___Okolí.txt" For Output As #4
+ 'Odstraním konce ODSTAVCŮ aby okolí bylo vždy na jednom řádku
+  retezec_originál$ = Replace(retezec_originál$, vbLf, "", , , vbBinaryCompare)  'LF
+  retezec_originál$ = Replace(retezec_originál$, vbCr, " ", , , vbBinaryCompare) 'CR
+  retezec_originál$ = Replace(retezec_originál$, "  ", " ")                      '2 MEZERY JEDNOU
+  retezec$ = " " & retezec_originál$                                             'Abych zachytil hned první znak
+  Call UPRAV_VŠECHNY_ZNAKY                                                       'Konce odstavců onechány beze změn, Konce Vět ponechány - kolem konců Vět vloženy mezery
+
+  ProgressBar.Min = 0
+  ProgressBar.Max = počet_slov_ve_slovníku
+  ProgressBar.Visible = True
+  lbl_PRACUJI.Caption = "Čekejte, sestavuji okolí slov": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+
+  Print #4, "................................................................................................................................................"
+  For číslo_slova = 1 To počet_slov_ve_slovníku             'Všechny řádky slovníku
+    ProgressBar.Value = číslo_slova
+    For číslo_synonyma = 1 To počet_synonym_max             'Všecna slova na řádku
+      If Slovník$(číslo_slova, číslo_synonyma) = "" Then
+        'Jsem na konci obsazeného řádku, na další řádku
+        Exit For
+      End If
+      SL$ = Slovník$(číslo_slova, číslo_synonyma)           'Zapamatuji si slovo
+     'Vracím hvězdičkovou konvenci ...............................
+      If Left(SL$, 1) <> " " Then SL$ = "*" & SL$           'Pro slovo aktualizuji "*" konvenci před
+      If Right(SL$, 1) <> " " Then SL$ = SL$ & "*"          'Pro slovo aktualizuji "*" konvenci za
+      Print #4, Trim(SL$); ": "; Tab(20);                   'Tisknu slovo / synonymum ze slovníku
+      n2 = 1                                                'Posun v textu, začínám
+      'V v celém datovém souboru postupně hledám slovo/synonymum
+      a$ = Slovník$(číslo_slova, číslo_synonyma)            'Vrátím slovo k prohledávání
+
+      nalezl = False
+      Do
+        DoEvents
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        'Esc - Zrušení výpočtu OKOLÍ
+        If ESC_enabled = True Then
+          ESC_enabled = False
+          Close
+          cmd_KONTEXTOVÉ_JEDNOTKY.Enabled = True
+          cmd_FREKVENCE_SLOV.Enabled = True
+          cmd_OKOLÍ_SLOV.Enabled = True
+          cmd_ABSOLUTNÍ_VZDÁLENOSTI.Enabled = True
+          cmd_VZOREC_TXT.Enabled = True
+          cmd_VZOREC_CSV.Enabled = True
+          cmd_NOVÉ_ZADÁNÍ.Enabled = True
+          cmd_ZPRACUJ.Visible = False
+          lbl_PRACUJI.Visible = False
+          ProgressBar.Visible = False
+          Exit Sub
+        End If
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        n1 = InStr(n2, UCase(retezec$), a$)                 'Začátek výskytu (slova jsou UCase)
+        If n1 = 0 Then
+         'Už žádný další výskyt synonma
+          Exit Do                                           'Již žádný výskyt, na další synonumum
+        Else
+         'Výskyt nalezen, testuji místo před a za okolím
+          nalezl = True
+          Select Case n1
+            Case Is < délka_okolí:
+              Print #4, Tab(20); String(délka_okolí - n1, " ");
+              Print #4, Left(retezec$, n1) & " " & a$ & " " & Mid(retezec$, n1 + Len(a$), délka_okolí)
+            Case Is < Len(a$) - délka_okolí:
+              Print #4, Tab(20); Mid(retezec$, n1 - délka_okolí, délka_okolí) & " " & a$ & " " & Right(retezec$, Len(retezec$) - n1) '; " Výskyt"
+            Case Else:
+              Print #4, Tab(20); Mid(retezec$, n1 - délka_okolí, délka_okolí) & " " & a$ & " " & Mid(retezec$, n1 + Len(a$), délka_okolí) '; " Výskyt"
+          End Select
+          n2 = n1 + 1                                       'Posunu se v textu
+        End If
+      Loop
+      If nalezl = False Then Print #4,                      'Slovo ani synonymum nebylo nalezeno, odřádkuji
+    Next číslo_synonyma                                     'Další synonumum
+    'Oddělení slov (řádků)
+    Print #4, "................................................................................................................................................"
+  Next číslo_slova                                          'Další řádka
+  Close #4
+
+'OKOLÍ SLOV - VÝSTUP ===================================================================================================================================
+  Dim o As Long
+  o = 34
+  Open cesta_k_VÝSLEDKŮM$ & "KWIC.txt" For Output As #1
+  Print #1, Tab(10); "OKOLÍ SLOV"
+  Print #1,
+  'Zde je Hlavička zkrácená
+  Print #1, "--------------------------------------------------------------------------------------"
+  Print #1, "Zpracováno dne:"; Tab(o); datum$
+  Print #1, "Datový soubor (txt):"; Tab(o); data_název$
+  Print #1, "Soubor slovníku (slv):"; Tab(o); slovník_název$
+  Print #1, "Počet slov - řádků ve slovníku:"; Tab(o - 1); počet_slov_ve_slovníku
+  Print #1, ""
+  Print #1,
+  Close #2
+  Open cesta_k_TEMP$ & "___Okolí.txt" For Input As #2
+  Do While Not EOF(2)
+    Line Input #2, a$: Print #1, a$
+  Loop
+  Close #2
+  Close #1
+
+  Dim e
+  e = Shell("C:\windows\notepad.exe " & cesta_k_VÝSLEDKŮM$ & "\" & "KWIC.txt", vbNormalFocus)
+  
+  cmd_KONTEXTOVÉ_JEDNOTKY.Enabled = True
+  cmd_FREKVENCE_SLOV.Enabled = True
+  cmd_OKOLÍ_SLOV.Enabled = True
+  cmd_ABSOLUTNÍ_VZDÁLENOSTI.Enabled = True
+  cmd_VZOREC_TXT.Enabled = True
+  cmd_VZOREC_CSV.Enabled = True
+  cmd_NOVÉ_ZADÁNÍ.Enabled = True
+  cmd_NOVÉ_ZADÁNÍ.Enabled = True
+  cmd_ZPRACUJ.Visible = False
+  lbl_PRACUJI.Visible = False
+  ProgressBar.Visible = False
+End Sub
+'######################################################################################################################
+Private Sub cmd_ABSOLUTNÍ_VZDÁLENOSTI_Click()
+Dim e
+  e = Shell("C:\windows\notepad.exe " & cesta_k_VÝSLEDKŮM$ & "\" & "abs - distance.txt", vbNormalFocus)
+End Sub
+'######################################################################################################################
+Private Sub cmd_VZOREC_TXT_Click()
+Dim e
+  e = Shell("C:\windows\notepad.exe " & cesta_k_VÝSLEDKŮM$ & "\" & "num - distance.txt", vbNormalFocus)
+End Sub
+'######################################################################################################################
+Private Sub cmd_VZOREC_CSV_Click()
+Dim e
+  e = Shell("C:\windows\notepad.exe " & cesta_k_VÝSLEDKŮM$ & "\" & "num - distance.csv", vbNormalFocus)
+End Sub
+
+
+
+'   ######  ####   #####   ##   ##
+'   ##     ##  ##  ##  ##  ### ###
+'   ####   ##  ##  #####   ## # ##
+'   ##     ##  ##  ## ##   ##   ##
+'   ##      ####   ##  ##  ##   ##
+'#######################################################################################################################################################
+  Private Sub Form_Load()
+'#######################################################################################################################################################
+Dim i As Long
+Dim a$
+  
+  KeyPreview = True
+  Pozadí = &HDFFFFF
+  With Form1:                   .Height = 8010:                             .Width = 8000: End With
+  With frm_SOUBOR:              .Height = 915:  .Left = 135:  .Top = 135:   .Width = 7600: .BackColor = Pozadí: End With
+    With cmd_VYBER_SOUBOR:      .Height = 500:  .Left = 180:  .Top = 300:   .Width = 2000: .BackColor = Pozadí: End With
+    With lbl_VYBRANY_SOUBOR:    .Height = 225:  .Left = 2300: .Top = 450:   .Width = 6000: .BackColor = Pozadí: End With
+  With frm_SLOVNIK:             .Height = 915:  .Left = 135:  .Top = 1170:  .Width = 7600: .BackColor = Pozadí: End With
+    With cmd_VYBER_SLOVNIK:     .Height = 500:  .Left = 180:  .Top = 300:   .Width = 2000: .BackColor = Pozadí: End With
+    With lbl_NAZEV_SLOVNIKU:    .Height = 225:  .Left = 2300: .Top = 450:   .Width = 6000: .BackColor = Pozadí: End With
+    With Line2:                 .X1 = 90: .X2 = 7700:   .Y1 = 2205:    .Y2 = 2205:     End With
+    With Line3:                 .X1 = 90: .X2 = 7700:   .Y1 = 3900:    .Y2 = 3900:     End With
+
+  With frm_KONTEXT_JEDNOTKA:    .Height = 1400: .Left = 135:  .Top = 2350:          .Width = 3075: .BackColor = Pozadí: End With
+    With opt_POCET_ZNAKU:       .Height = 195:  .Left = 180:  .Top = 10000:         .Width = 1635: .BackColor = Pozadí: End With 'TRVALE SKRYTO ************
+    With txt_DÉLKA_JEDNOTKY:    .Height = 285:  .Left = 1935: .Top = 10000:         .Width = 800:  .Text = "":          End With 'Po startu skryto
+    With opt_POCET_SLOV:        .Height = 195:  .Left = 180:  .Top = 100 + 1 * 225: .Width = 1635: .BackColor = Pozadí: End With
+    With opt_POCET_VET:         .Height = 195:  .Left = 180:  .Top = 100 + 2 * 225: .Width = 1635: .BackColor = Pozadí: End With
+    With opt_POCET_ODSTAVCU:    .Height = 195:  .Left = 180:  .Top = 100 + 3 * 225: .Width = 1660: .BackColor = Pozadí: End With
+    With opt_JINY_ZNAK:         .Height = 195:  .Left = 180:  .Top = 100 + 4 * 225: .Width = 1660: .BackColor = Pozadí: End With
+    With txt_JINY_ZNAK:         .Height = 240:  .Left = 1980: .Top = 360 + 4 * 225: .Width = 540:  End With
+
+  With cmd_ZPRACUJ:             .Height = 500:  .Left = 4620: .Top = 2600: .Width = 1700: .Visible = False: .BackColor = Pozadí: .Enabled = False: End With
+  With ProgressBar:             .Height = 200:  .Left = 3500: .Top = 3500: .Width = 4000: .Visible = False: .Min = 0: End With
+  With lbl_PRACUJI:             .Height = 285:  .Left = 3500: .Top = 3200: .Width = 4000: .Visible = False: .BackColor = Pozadí: End With
+
+  With frm_VÝSLEDKY:              .Height = 2415:  .Left = 120:  .Top = 4080: .Width = 7600: .BackColor = Pozadí: .Visible = False: .Caption = "                              Výsledkové sestavy                                   ": End With
+    With cmd_KONTEXTOVÉ_JEDNOTKY: .Height = 400:   .Left = 600:  .Top = 480:  .Width = 2200: .BackColor = Pozadí: .Caption = "Kontextové jednotky": End With
+    With cmd_FREKVENCE_SLOV:      .Height = 400:   .Left = 600:  .Top = 980:  .Width = 2200: .BackColor = Pozadí: .Caption = "Frekvence slov":      End With
+    With cmd_OKOLÍ_SLOV:          .Height = 400:   .Left = 600:  .Top = 1480: .Width = 2200: .BackColor = Pozadí: .Caption = "Okolí slov":          End With
+    With cmd_ABSOLUTNÍ_VZDÁLENOSTI: .Height = 400: .Left = 3600: .Top = 480:  .Width = 3400: .BackColor = Pozadí: .Caption = "Absolutní vzdálenosti slov (txt)":    End With
+    With cmd_VZOREC_TXT:          .Height = 400:   .Left = 3600: .Top = 960:  .Width = 3400: .BackColor = Pozadí: .Caption = "Normalizované vzdálenosti slov (txt)": End With
+    With cmd_VZOREC_CSV:          .Height = 400:   .Left = 3600: .Top = 1480: .Width = 3400: .BackColor = Pozadí: .Caption = "Normalizované vzdálenosti slov (csv)": End With
+    With cmd_NOVÉ_ZADÁNÍ:         .Height = 400:   .Left = 2600: .Top = 6650: .Width = 2175: .BackColor = Pozadí: .Caption = "Nové zadání": .Visible = False: End With
+    With lbl_CESTA_VÝSLEDKY:      .Height = 300:   .Left = 120:  .Top = 2100: .Width = 7335: .BackColor = Pozadí: .Caption = "----": End With
+
+ 'Cesty k systémovým složkám
+  'CSIDL_DESKTOPDIRECTORY '0x0010 C:\Documents and Settings\username\Desktop.
+  'CSIDL_PERSONAL         '0x0005 C:\Documents and Settings\username\My Documents.
+  'CSIDL_PROGRAM_FILES    '0x0026 C:\Program Files.
+  'CSIDL_STARTMENU        '       C:\Documents and Settings\username\Start Menu.
+  'CSIDL_STARTUP          '0x0007 C:\Documents and Settings\username\Start Menu\Programs\Startup.
+  'CSIDL_SYSTEM           '       C:\Windows\System32.
+  'CSIDL_WINDOWS          '0x0024 C:\Windows.
+ 
+ 'Cesty k programu a datům ..........................................................................................................
+  cesta_k_INSTALACI$ = App.Path               'Odkud zpuštěn program
+  
+  'Cesta k Dokumentům
+  Const CSIDL_PERSONAL = &H5                                    'C:\Documents and Settings\username\My Documents.
+  a$ = String$(260, Chr$(0))                                    'Make enough room in the buffer to receive the string.
+  i = SHGetSpecialFolderPath(Form1.hwnd, a$, CSIDL_PERSONAL, 0) 'Get the path name of the My Documents special folder.
+  a$ = Left(a$, InStr(a$, vbNullChar) - 1)                      'C:\Documents and Settings\user\Dokumenty.
+  
+  'Cesta k výsledkům
+  cesta_k_VÝSLEDKŮM$ = a$ & "\__COOA\"
+  If Dir(cesta_k_VÝSLEDKŮM$, vbDirectory) = "" Then MkDir cesta_k_VÝSLEDKŮM$  'C:\Documents and Settings\user\Dokumenty\COOA\
+  
+  'Cesta k Temp (CESTA.cesta, PARAMETRY.param)
+  cesta_k_TEMP$ = a$ & "\__COOA\Temp\"
+  If Dir(cesta_k_TEMP$, vbDirectory) = "" Then MkDir cesta_k_TEMP$            'C:\Documents and Settings\user\Dokumenty\COOA\Temp\
+    '........................................................................................................................................
+  
+  If Dir(cesta_k_TEMP$ & "PARAMETRY.param", vbNormal) = "" Then
+    'Soubor PARAMETRY Neexistuje, uložím defaultní zadání
+    Open cesta_k_TEMP$ & "PARAMETRY.param" For Output As #1   'Uložím defaultní parametry
+    Param(1) = "10": Print #1, Param(1)                       'Slova
+    Param(2) = "1":  Print #1, Param(2)                       'Věty
+    Param(3) = "1":  Print #1, Param(3)                       'Odstavce
+    Param(4) = " ":  Print #1, Param(4)                       'Jiný znak
+    Close #1
+  Else
+    'Soubor PARAMETRY Existuje, má ale příliš malou délku, uložím defaultní zadání
+    If FileLen(cesta_k_TEMP$ & "PARAMETRY.param") < 10 Then
+      Open cesta_k_TEMP$ & "PARAMETRY.param" For Output As #1 'Uložím defaultní parametry
+    Param(1) = "10": Print #1, Param(1)                       'Slova
+    Param(2) = "1":  Print #1, Param(2)                       'Věty
+    Param(3) = "1":  Print #1, Param(3)                       'Odstavce
+    Param(4) = " ":  Print #1, Param(4)                       'Jiný znak
+      Close #1
+    End If
+    
+    'Soubor PARAMETRY Existuje, načtu předchozí zadání
+    Open cesta_k_TEMP$ & "PARAMETRY.param" For Input As #1    'Načtu parametr, KJ slova
+    'Načtu stávající Parametry
+    Input #1, Param(1): Input #1, Param(2): Input #1, Param(3): Input #1, Param(4)
+    Close #1
+    'Načtené zobrazím do Txt
+    Select Case Výběr_KJ$                                     'Načtené zobrazím v Txt
+      Case "slovo":     txt_DÉLKA_JEDNOTKY.Text = Param(1)    'Slova
+      Case "věta":      txt_DÉLKA_JEDNOTKY.Text = Param(2)    'Věty
+      Case "odstavec":  txt_DÉLKA_JEDNOTKY.Text = Param(3)    'Odstavce
+      Case "jiný_znak": txt_JINY_ZNAK.Text = Param(4)         'Jiný znak
+    End Select
+  End If
+ 
+ 'Cesty k systémovým složkám
+  'CSIDL_DESKTOPDIRECTORY '0x0010 C:\Documents and Settings\username\Desktop.
+  'CSIDL_PERSONAL         '0x0005 C:\Documents and Settings\username\My Documents.
+  'CSIDL_PROGRAM_FILES    '0x0026 C:\Program Files.
+  'CSIDL_STARTMENU        '       C:\Documents and Settings\username\Start Menu.
+  'CSIDL_STARTUP          '0x0007 C:\Documents and Settings\username\Start Menu\Programs\Startup.
+  'CSIDL_SYSTEM           '       C:\Windows\System32.
+  'CSIDL_WINDOWS          '0x0024 C:\Windows.
+ 
+ 'Odstranění Výsledků a pomocných souborů
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.pqr", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.pqr"
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.txt", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.txt"
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.dat", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.dat"
+  If Dir$(cesta_k_VÝSLEDKŮM$ & "*.csv", vbNormal) <> "" Then Kill cesta_k_VÝSLEDKŮM$ & "*.csv"
+  If Dir$(cesta_k_TEMP$ & "*.pqr", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.pqr"
+  If Dir$(cesta_k_TEMP$ & "*.txt", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.txt"
+  If Dir$(cesta_k_TEMP$ & "*.dat", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.dat"
+  If Dir$(cesta_k_TEMP$ & "*.csv", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.csv"
+
+  'Úvodní nastavení
+  frm_SOUBOR.Visible = True               'Vše kromě výběru souboru zneviditelním
+    cmd_VYBER_SOUBOR.Enabled = True
+    lbl_VYBRANY_SOUBOR.Visible = False    'Vše kromě výběru souboru zneviditelním
+    frm_SLOVNIK.Visible = True            'Vše kromě výběru souboru zneviditelním
+    lbl_NAZEV_SLOVNIKU.Visible = False    'Vše kromě výběru souboru zneviditelním
+    cmd_VYBER_SLOVNIK.Enabled = True
+    Line2.Visible = False
+  frm_KONTEXT_JEDNOTKA.Visible = False    'Vše kromě výběru souboru zneviditelním
+    opt_POCET_ZNAKU.Value = True          'SKRYTÉ mimo prostor frm - pomocné, první aktuální
+    opt_POCET_ZNAKU.Visible = True        'SKRYTÉ mimo prostor frm - pomocné, první aktuální
+    opt_POCET_SLOV.Visible = True         'Zaškrtávací pole připravím k zviditelnění
+    opt_POCET_VET.Visible = True          'Zaškrtávací pole připravím k zviditelnění
+    opt_POCET_ODSTAVCU.Visible = True     'Zaškrtávací pole připravím k zviditelnění
+    opt_JINY_ZNAK.Visible = True          'Zaškrtávací pole připravím k zviditelnění
+    txt_DÉLKA_JEDNOTKY.Visible = True     'Pole připravím k zviditelnění
+    txt_JINY_ZNAK.Visible = False         'Viditelnost zruším
+    jiný_znak$ = "#"
+    txt_JINY_ZNAK.Text = jiný_znak$
+  frm_KONTEXT_JEDNOTKA.Enabled = True
+  cmd_VYBER_SOUBOR.Enabled = True
+  cmd_VYBER_SLOVNIK.Enabled = True
+  opt_POCET_SLOV.Enabled = True
+  opt_POCET_VET.Enabled = True
+  opt_POCET_ODSTAVCU.Enabled = True
+  opt_JINY_ZNAK.Enabled = True
+  cmd_ZPRACUJ.Enabled = True
+  txt_DÉLKA_JEDNOTKY.Enabled = True
+  txt_JINY_ZNAK.Enabled = True
+  cmd_ZPRACUJ.Enabled = False:
+  Line3.Visible = False
+  Soubor_OK = False: Slovník_OK = False 'Zruším hotové zadání
+
+'Open "____Doba trvání základních výpočtů.txt" For Output As #13
+      
+End Sub
+'######################################################################################################################
+Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+  If KeyCode = 27 Then
+    ESC_enabled = True
+    'Ulož aktuální PARAMETRY
+    Dim n As Long
+    Open cesta_k_TEMP$ & "PARAMETRY.param" For Output As #1             'Soubor s parametry
+    For n = 1 To 4                                                     'Zapiš stav aktualizovaného pole so souboru
+      Print #1, Param$(n)
+    Next n
+    Close
+  'Odstranění pomocných souborů
+  If Dir$(cesta_k_TEMP$ & "*.pqr", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.pqr"
+  If Dir$(cesta_k_TEMP$ & "*.txt", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.txt"
+  If Dir$(cesta_k_TEMP$ & "*.dat", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.dat"
+  If Dir$(cesta_k_TEMP$ & "*.csv", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.csv"
+    End
+  End If
+End Sub
+'######################################################################################################################
+Private Sub Form_Unload(Cancel As Integer)
+  Close
+  retezec$ = ""
+  'Odstranění pomocných souborů
+  If Dir$(cesta_k_TEMP$ & "*.pqr", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.pqr"
+  If Dir$(cesta_k_TEMP$ & "*.txt", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.txt"
+  If Dir$(cesta_k_TEMP$ & "*.dat", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.dat"
+  If Dir$(cesta_k_TEMP$ & "*.csv", vbNormal) <> "" Then Kill cesta_k_TEMP$ & "*.csv"
+  ChDrive Left$(cesta_k_INSTALACI$, 1)
+  ChDir cesta_k_INSTALACI$
+   
+  'Ulož aktuální PARAMETRY
+  Open cesta_k_TEMP$ & "PARAMETRY.param" For Output As #1             'Soubor s parametry
+  Dim n As Long
+  For n = 1 To 4                                                     'Zapiš stav aktualizovaného pole so souboru
+    Print #1, Param$(n)
+  Next n
+  Close #1
+  
+  End                                         'Pokud spuštěno samostatně, pak konec
+End Sub
+
+'                      ##
+'  ##   ##    ##     ####  ######  ##       ######     ##   ######   ##
+'  ###  ##   ####   ##  ##   ##    ##       ##   ##   ####    ##    ####
+'  ## # ##  ##  ##  ##       ##    ##       ##   ##  ##  ##   ##   ##  ##
+'  ##  ###  ######  ##  ##   ##    ##       ##   ##  ######   ##   ######
+'  ##   ##  ##  ##   ####    ##    ##       ######   ##  ##   ##   ##  ##
+'#######################################################################################################################################################
+' 1.  VYBRÁNÍ  TEXTOVÉHO  SOUBORU
+'#######################################################################################################################################################
+Private Sub cmd_VYBER_SOUBOR_Click()
+Dim i As Long, j As Long
+Dim a$
+Dim prázdný_soubor As Boolean
+
+frm_KONTEXT_JEDNOTKA.Visible = False
+ 'Výběr SOUBORU k prohledávání ........................................................................
+  'Podívám se, jestli cesta k datům není uložena
+  If Dir$(cesta_k_TEMP$ & "\CESTA.cesta", vbNormal) <> "" Then    'Existuje-li soubor s cestou
+    Open cesta_k_TEMP$ & "\CESTA.cesta" For Input As #1           'Načtu cestu a použiji jí jako  InitDir
+    Line Input #1, a$
+    Close #1
+    With dlg_OPEN
+      .DialogTitle = "    Vyberte textový soubor ke zpracování"
+      .InitDir = a$
+      .Filter = "Textový soubor (*.txt) |*.txt"
+      .FileName = ""                                              'Přednastavený soubor
+      .ShowOpen
+    End With
+  Else
+    With dlg_OPEN
+      .DialogTitle = "    Vyberte textový soubor ke zpracování"
+      .Filter = "Textový soubor (*.txt) |*.txt"
+      .FileName = ""                                              'Přednastavený soubor
+      .ShowOpen
+    End With
+  End If
+  datový_soubor$ = Trim$(dlg_OPEN.FileName)                     'Název souboru ke zpracování
+  
+ 'Test vybraného názvu .........................................................................................
+  If datový_soubor$ = "" Or UCase$(Right$(datový_soubor$, 3)) <> "TXT" Then
+    Title = " Chyba ve výběru souboru"                          'Definice nadpisu informačního okna
+    Msg = "     Nevybral jste datový soubor!" & vbCrLf & vbCrLf
+    Msg = Msg & "   Zadejte jiný." & vbCrLf
+    Style = vbOKOnly + vbCritical                               'Definice tlačítek
+    Response = MsgBox(Msg, Style, Title)                        'Zobrazení zprávy
+    ChDrive Left$(cesta_k_INSTALACI$, 1)
+    ChDir cesta_k_INSTALACI$
+    Exit Sub
+  End If
+  
+  'Test prázdného slovníku .....................................................................................
+  Open datový_soubor$ For Input As #1
+  If FileLen(datový_soubor$) = 0 Then
+    'Soubor bez záznamu
+    Title = " Prázdný datový soubor"                  'Definice nadpisu informačního okna
+    Msg = "   Vybraný datový soubor neobsahuje žádná data," & vbCrLf
+    Msg = Msg & "     soubor je prázdný!" & vbCrLf & vbCrLf
+    Msg = Msg & "   Zadejte jiný." & vbCrLf
+    Style = vbOKOnly + vbCritical                     'Definice tlačítek
+    Response = MsgBox(Msg, Style, Title)              'Zobrazení zprávy
+    Close #1
+    ChDrive Left$(cesta_k_INSTALACI$, 1)
+    ChDir cesta_k_INSTALACI$
+    Exit Sub
+  Else
+    Do While Not EOF(1)
+      Line Input #1, a$
+      If Trim(a$) <> "" Then
+        GoTo Soubor_plný
+      Else
+        prázdný_soubor = True
+      End If
+    Loop
+    If prázdný_soubor = True Then
+      Title = " Soubor bez dat"                     'Definice nadpisu informačního okna
+      Msg = "   Vybraný datový soubor neobsahuje žádná data," & vbCrLf
+      Msg = Msg & "     soubor je prázdný!" & vbCrLf & vbCrLf
+      Msg = Msg & "   Zadejte jiný." & vbCrLf
+      Style = vbOKOnly + vbCritical                 'Definice tlačítek
+      Response = MsgBox(Msg, Style, Title)          'Zobrazení zprávy
+      Close #1
+      ChDrive Left$(cesta_k_INSTALACI$, 1)
+      ChDir cesta_k_INSTALACI$
+      Exit Sub
+    End If
+  End If
+Soubor_plný:
+  Close #1
+  
+  'Uložení cesty k datům .........................................................................................
+  Open cesta_k_TEMP$ & "\CESTA.cesta" For Output As #1          'Vybranou cestu si uložím pro následné použití
+  Print #1, datový_soubor$
+  Close #1
+ 
+  'Zpracování souboru v kódování UTF-8 .........................................................................................
+  Open datový_soubor$ For Input As #1
+  Line Input #1, a$
+  Close #1
+  If Left(a$, 3) = "ď»ż" Then
+    'Zobrazení zprávy.
+    Title = "Nutná změna kódování souboru"                      'Definice nadpisu.
+    Msg = "Data jsou pro zpravonání v nevhodném kódování UTF-8." & vbCrLf  'Definice zprávy.
+    Msg = Msg & "Kódování je proto nutné změnit!" & vbCrLf & vbCrLf            'Definice zprávy.
+    Msg = Msg & "Datový soubor otevřete v Notepadu a uložte v kódování ANSI." & vbCrLf 'Definice zprávy.
+    Msg = Msg & "Po překódování program opět spusťte."          'Definice zprávy.
+    Style = vbOKOnly                                            'Definice tlačítek - jen OK.
+    Response = MsgBox(Msg, Style, Title)                        'Nutno dodržet pořadí !!!
+    ChDrive Left$(cesta_k_INSTALACI$, 1)
+    ChDir cesta_k_INSTALACI$
+    End                                                         'Po stisku OK konec programu.
+  End If
+
+  'Test délky souboru ......................................................................
+  Open datový_soubor$ For Input As #5           'Datový soubor
+  délka_original_souboru = FileLen(datový_soubor$)
+  Close #5
+  If délka_original_souboru > 50000000 Then     'Test délky
+    Title = " Extrémní délka datového souboru"  'Definice nadpisu informačního okna
+    Msg = "  Délka vybraného datového souboru překračuje maximální hodnotu 50 MB!" & vbCrLf & vbCrLf
+    Msg = Msg & "  Vyberte jiný soubor, nebo upravte jeho délku." & vbCrLf
+    Style = vbOKOnly + vbCritical               'Definice tlačítek
+    Response = MsgBox(Msg, Style, Title)        'Zobrazení zprávy
+    cmd_VYBER_SOUBOR.Enabled = True             'Aktivuji tlačítko pro další spuštění
+    lbl_VYBRANY_SOUBOR.Caption = ""
+    ChDrive Left$(cesta_k_INSTALACI$, 1)
+    ChDir cesta_k_INSTALACI$
+    Exit Sub
+  End If
+  
+  'Odstranění prázdných řádek z Datového souboru
+  Open datový_soubor$ For Input As #5           'Datový soubor
+  Open "X.txt" For Output As #6                 'Pomocný D soubor
+  Do While Not EOF(5)
+    Line Input #5, a$                           'Čtu řádky
+    If Trim(a$) <> "" Then Print #6, a$         'Pokud řádka není prázdná, tisknu jí do pomocného
+  Loop
+  Close #5: Close #6                            'Zavřu
+  FileCopy datový_soubor$, "XX.txt"             'Původní datový soubor si uschovám do XX.txt
+  FileCopy "X.txt", datový_soubor$              'Vyčištěný pomocný X.txt vložím do Datového
+  Kill "X.txt"                                  'Vymažu pomocný
+
+  'Načtení datového souboru do stringu
+  Open datový_soubor$ For Binary As #1          'Otevřu datový soubor
+  délka_souboru = FileLen(datový_soubor$)       'Zjistím jeho délku
+  a$ = Space(délka_souboru)                     'Musím vytvořit prostor pro uložení do stringu
+  Get #1, , a$                                  'Vložení do stringu a$
+  Close #1
+  retezec_originál$ = a$                        'Uložím originální data pro OKOLÍ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  retezec$ = a$                                 'Abych mohl se stringem pracovat - měnit délku, musím ho uložit do jiného dynamického
+  a$ = ""
+   
+ 'Načtená originální DATA uložím do pomocného datového souboru
+  Open cesta_k_TEMP$ & "\" & "Datovy_soubor.dat" For Binary As #2 'Čistá data uložím do pomocného datového souboru
+  Put #2, , retezec$
+  Close #2
+  délka_DAT_souboru = Len(retezec$)             'Uložím počet relevantních znaků
+
+ 'Cesta k datům
+  i = InStrRev(datový_soubor$, "\")
+  lbl_VYBRANY_SOUBOR.FontBold = True
+  i = InStrRev(datový_soubor$, "\")
+  a$ = Right$(datový_soubor$, Len(datový_soubor$) - i)
+  data_název$ = a$
+  cesta_souboru$ = Left$(datový_soubor$, i)     'Cesta včetně koncového lomítka
+  lbl_VYBRANY_SOUBOR.Caption = "Soubor: " & a$
+  lbl_VYBRANY_SOUBOR.Visible = True
+  
+ 'Uschovaný původní datový soubor v XX.txt vrátím zpět do "původního"
+  FileCopy "XX.txt", datový_soubor$             'Pomocný uschovaný překopíruji do Datového
+  Kill "XX.txt"                                 'Vymažu pomocný
+ 
+ 'Zaznamenáno, že DATOVÝ soubor byl načten OK
+  Soubor_OK = True
+  
+ 'Zobrazení pro načtení Slovníku
+  ChDrive Left$(cesta_k_INSTALACI$, 1)
+  ChDir cesta_k_INSTALACI$
+  cmd_VYBER_SOUBOR.Enabled = True
+  If Soubor_OK = True And Slovník_OK = True Then
+    frm_KONTEXT_JEDNOTKA.Visible = True
+  End If
+
+End Sub
+
+
+'                      ##                                                             ##
+'  ##   ##    ##     ####  ######  ##         ####   ##     ####   ##   ##  ##   ##  ##  ##  ##
+'  ###  ##   ####   ##  ##   ##    ##        ##      ##    ##  ##  ##   ##  ###  ##  ##  ## ##
+'  ## # ##  ##  ##  ##       ##    ##         ####   ##    ##  ##  ##   ##  ## # ##  ##  ####
+'  ##  ###  ######  ##  ##   ##    ##            ##  ##    ##  ##   ## ##   ##  ###  ##  ## ##
+'  ##   ##  ##  ##   ###     ##    ##         ####   #####  ####     ###    ##   ##  ##  ##  ##
+'#######################################################################################################################################################
+' 2. VYBRÁNÍ  A  ZPRACOVÁNÍ  SLOVNÍKU
+'#######################################################################################################################################################
+Private Sub cmd_VYBER_SLOVNIK_Click()
+Dim i As Long, j As Long, n As Long
+Dim a$
+Dim prvni_slovo As Boolean
+Dim prázdný_soubor As Boolean
+  
+  frm_KONTEXT_JEDNOTKA.Visible = False
+  lbl_NAZEV_SLOVNIKU.Visible = False
+
+'Výběr SLOVNÍKU .....................................................................................
+  With dlg_OPEN
+    .DialogTitle = "    Vyberte slovník"
+    .InitDir = cesta_souboru$                   'Nabízím stejnou cestu jako u dat
+    .Filter = "Slovník (*.slv) |*.slv"
+    .FileName = ""                              'Přednastavený soubor
+    .ShowOpen
+  End With
+  Slov$ = dlg_OPEN.FileName                     'Název souboru ke zpracování
+  
+  'Test vybraného názvu .....................................................................................
+  If Slov$ = "" Or UCase$(Right$(Slov$, 3)) <> "SLV" Then
+    Title = " Chyba ve výběru slovníku"         'Definice nadpisu informačního okna
+    Msg = "    Nevybral jste slovník!" & vbCrLf & vbCrLf
+    Msg = Msg & "   Zadejte jiný." & vbCrLf
+    Style = vbOKOnly + vbCritical               'Definice tlačítek
+    Response = MsgBox(Msg, Style, Title)        'Zobrazení zprávy
+    ChDrive Left$(cesta_k_INSTALACI$, 1)
+    ChDir cesta_k_INSTALACI$
+    Exit Sub
+  End If
+  
+  'Test prázdného slovníku .....................................................................................
+  Open Slov$ For Input As #1
+  If FileLen(Slov$) = 0 Then
+    Title = " Prázdný slovník"                  'Definice nadpisu informačního okna
+    Msg = "   Vybraný slovník neobsahuje žádná data," & vbCrLf
+    Msg = Msg & "     je prázdný!" & vbCrLf & vbCrLf
+    Msg = Msg & "   Zadejte jiný." & vbCrLf
+    Style = vbOKOnly + vbCritical               'Definice tlačítek
+    Response = MsgBox(Msg, Style, Title)        'Zobrazení zprávy
+    Close #1
+    ChDrive Left$(cesta_k_INSTALACI$, 1)
+    ChDir cesta_k_INSTALACI$
+    Exit Sub
+  Else
+    Do While Not EOF(1)
+      Line Input #1, a$
+      If Trim(a$) <> "" Then
+        GoTo Soubor_plný
+      Else
+        prázdný_soubor = True
+      End If
+    Loop
+    If prázdný_soubor = True Then
+      Title = " Soubor bez dat"                     'Definice nadpisu informačního okna
+      Msg = "   Vybraný datový soubor neobsahuje žádná data," & vbCrLf
+      Msg = Msg & "     soubor je prázdný!" & vbCrLf & vbCrLf
+      Msg = Msg & "   Zadejte jiný." & vbCrLf
+      Style = vbOKOnly + vbCritical                 'Definice tlačítek
+      Response = MsgBox(Msg, Style, Title)          'Zobrazení zprávy
+      Close #1
+      ChDrive Left$(cesta_k_INSTALACI$, 1)
+      ChDir cesta_k_INSTALACI$
+      Exit Sub
+    End If
+  End If
+Soubor_plný:
+  Close #1
+  
+  'Test souboru v kódování UTF-8 .....................................................................................
+  Open Slov$ For Input As #1
+  Line Input #1, a$
+  Close #1
+  If Left(a$, 3) = "ď»ż" Then
+    'Zobrazení zprávy.
+    Title = "Nutná změna kódování souboru"                      'Definice nadpisu.
+    Msg = "Data jsou pro zpravonání v nevhodném kódování UTF-8." & vbCrLf 'Definice zprávy.
+    Msg = Msg & "Kódování je proto nutné změnit!" & vbCrLf & vbCrLf       'Definice zprávy.
+    Msg = Msg & "Datový soubor otevřete v Notepadu a uložte v kódování ANSI." & vbCrLf 'Definice zprávy.
+    Msg = Msg & "Po překódování program opět spusťte."          'Definice zprávy.
+    Style = vbOKOnly                                            'Definice tlačítek - jen OK.
+    Response = MsgBox(Msg, Style, Title)                        'Nutno dodržet pořadí !!!
+    ChDrive Left$(cesta_k_INSTALACI$, 1)
+    ChDir cesta_k_INSTALACI$
+    End                                                         'Po stisku OK konec programu.
+  End If
+  
+ 'Zjištění počtu základních slov ve slovníku, Odstranění prázdných řádků .....................................
+  Open Slov$ For Input As #1                              'Slovník
+  Open Slov$ & "_X" For Output As #2                      'Pomocný doubor slovníku - bez prázdných řádek
+  počet_slov_ve_slovníku = 0
+  Do While Not EOF(1)                                     'Pro všechny řádky ve slovníku
+    Line Input #1, řádka_slovníku$                        'Přečti celou řádku slovníku
+    If Trim$(řádka_slovníku$) <> "" Then                  'Test plné řádky
+      počet_slov_ve_slovníku = počet_slov_ve_slovníku + 1 'Počet řádek = počet základních slov
+      Print #2, řádka_slovníku$                           'Ukádám jen obsazené řádky slovníku
+    End If
+  Loop
+  Close #1
+  Close #2
+  FileCopy Slov$ & "_X", Slov$                            'Pomocný soubor překopíruji so slovníku
+  Kill Slov$ & "_X"                                       'Odstraním pomocný soubor
+  
+  'Zobrazení názvu slovníku .....................................................................................
+  i = InStrRev(Slov$, "\")
+  a$ = Right$(Slov$, Len(Slov$) - i)
+  slovník_název$ = a$
+  lbl_NAZEV_SLOVNIKU.Caption = "Slovník: " & a$
+  lbl_NAZEV_SLOVNIKU.FontBold = True
+  lbl_NAZEV_SLOVNIKU.Visible = True
+  
+ 'Naplnění pole slovník$(počet_slov,počet_synonym) ze slovníku ........................................
+  'Ze slovníku postupně vyberu všechny řádky - číslo_slova (jejich počet znám z předchozího):
+  '     - zjistím synonyma a uložím je do pole   "slovník$(počet_slov,počet_synonym)"
+  '     - zjistím maximální počet synonym        "počet_synonym_max"
+  '!!!! Žádné úpravy slov
+  ReDim Slovník$(počet_slov_ve_slovníku, 50)  'Pole slovníku
+  Open Slov$ For Input As #1
+  počet_synonym_max = 0
+  For číslo_slova = 1 To počet_slov_ve_slovníku 'Pro všechny řádky ve slovníku
+    Line Input #1, řádka_slovníku$            'Načti celou řádku
+    řádka_slovníku$ = Trim$(řádka_slovníku$)
+    If Trim$(řádka_slovníku$) = "" Then
+      Line Input #1, řádka_slovníku$          'Je-li už prázdná řádka, načti další
+      řádka_slovníku$ = Trim$(řádka_slovníku$)
+    End If
+    If Right$(řádka_slovníku$, 1) = "," Then řádka_slovníku$ = Left$(řádka_slovníku$, Len(řádka_slovníku$) - 1)
+    n1 = 1                                    'Pozice čárky
+    n2 = InStr(n1 + 1, řádka_slovníku$, ",")  'Pozice další čárky
+    Počet_Synonym = 0                         'Přednastav počet synonym
+    prvni_slovo = False                       'První slovo na řádku (základní) se zpracovává jinak
+    Do
+      If n1 <> 0 And n2 <> 0 Then             'Existují-li dvě čárky za sebou
+        Počet_Synonym = Počet_Synonym + 1     'Připočti synonymo, ulož synonymo a základní slovo
+        Slovník$(číslo_slova, Počet_Synonym) = UCase$(Trim$(Mid$(řádka_slovníku$, n1, n2 - n1)))
+        If prvni_slovo = False Then           'Základní slovo je první na řádku
+          prvni_slovo = True                  'Zruš, že první
+        End If
+        n1 = 1 + InStr(n1, řádka_slovníku$, ",")  'Zjisti polohu další čárky
+        n2 = InStr(n1 + 1, řádka_slovníku$, ",")  ' a polohu čárku za "další" čárkou
+      End If
+      If n1 <> 0 And n2 = 0 Then              'Neexistuje-li další čárka - jsme na konci nebo na začátku
+        Počet_Synonym = Počet_Synonym + 1     'Připočti synonymo, ulož synonymo a základní slovo
+        If prvni_slovo = False Then           'Je-li první slovo, pak nejsou žádná synonyma
+          prvni_slovo = True                  'Zruš, že první
+          Slovník$(číslo_slova, Počet_Synonym) = UCase$(Trim$(řádka_slovníku$))
+        Else                                  'Ulož synonymo a základní slovo
+          Slovník$(číslo_slova, Počet_Synonym) = UCase$(Trim$(Right$(řádka_slovníku$, Len(řádka_slovníku$) - n1 + 1)))
+        End If
+        Exit Do                               'Po konci řádky konec
+      End If
+    Loop
+    If počet_synonym_max < Počet_Synonym Then počet_synonym_max = Počet_Synonym
+  Next číslo_slova
+  Close #1
+  ReDim Preserve Slovník$(počet_slov_ve_slovníku, počet_synonym_max)  'Sraz pole synonym
+  
+ 'Úprava slovníku - hvězdičková konvence ===================================================================
+  ' Upravuji "*" konvenci - k "celým" přidávám mezery buď na konci nebo na začátku nebo obojí
+  For číslo_slova = 1 To počet_slov_ve_slovníku
+    For číslo_synonyma = 1 To počet_synonym_max
+      a$ = Slovník$(číslo_slova, číslo_synonyma)  'Vezmi synonymum
+      i = InStr(a$, "*")                          'Vyhledej "*"
+      If i = 0 Then                               'Není-li žádná
+        If Trim$(a$) = "" Then                    'Není-li synonymum, pak ulož prázdný string
+          a$ = ""
+        Else
+          'Celá slova - na začátek a konec přidej " "
+          a$ = " " & a$ & " "                             'Udělej celé slovo
+          Slovník$(číslo_slova, číslo_synonyma) = a$      'Zapiš do pole
+        End If
+      Else
+        j = InStr(i + 1, a$, "*")                         'Byla-li "*", hledej další
+        If j = 0 Then                                     'Druhá "*" není
+          If i = 1 Then
+            'Celé slovo jen na konci ("*" na začátku) - na konec přidej " "
+            a$ = Right$(a$, Len(a$) - 1) & " "            'Odstraň "*" a na konec přidej mezeru
+            Slovník$(číslo_slova, číslo_synonyma) = a$    'Zapiš do pole
+          Else                                            '"*" byla na konci
+            'Celé slovo na jen začátku ("*" na konci) - na začátek přidej " "
+            a$ = " " & Left$(a$, Len(a$) - 1)             'Odstraň "*" a na začátek přidej mezeru
+            Slovník$(číslo_slova, číslo_synonyma) = a$    'Zapiš do pole
+          End If
+        Else
+          'Žádné celé slovo - neupravuj (jsou obě "*")
+          a$ = Mid$(a$, 2, Len(a$) - 2)                   'Odstraň obě "*"
+          Slovník$(číslo_slova, číslo_synonyma) = a$      'Zapiš do pole
+        End If
+      End If
+    Next číslo_synonyma
+  Next číslo_slova
+ 
+ 'Test, zda se ve slovníku nevyskytuje jedno slovo dvakrát .................................................
+  For číslo_slova = 1 To počet_slov_ve_slovníku             'Pro všechna slova
+    For číslo_synonyma = 1 To počet_synonym_max             'Pro všechny synonyma slov
+      a$ = Replace$(Slovník$(číslo_slova, číslo_synonyma), "*", "") 'Uložím si slovo
+      n = 0
+      'Porovnávám se všemi ve slovníku
+      For i = 1 To počet_slov_ve_slovníku                   'Pro všechna slova
+        For j = 1 To počet_synonym_max                      'Pro všechny synomuma slov
+          If a$ <> "" Then                                  'Prázdné pozice přeskakuji
+            If InStr(Slovník$(i, j), a$) <> 0 Then          'Testuji shodu
+              n = n + 1                                     'Započtu shodu
+              If n > 1 Then                                 'Shoda smí být jen jednou (samo se sebou)
+                Title = " Duplicitní slova ve slovníku"     'Definice nadpisu informačního okna
+                Msg = Msg & " Ve slovníku se slovo   " & Chr$(34) & a$ & Chr$(34) & "   vyskytuje 2x   " & vbCrLf
+                Msg = Msg & vbCrLf
+                Msg = Msg & " Slovník je třeba upravit!" & vbCrLf
+                Style = vbOKOnly + vbCritical               'Definice tlačítek
+                Response = MsgBox(Msg, Style, Title)        'Zobrazení zprávy
+                ChDrive Left$(cesta_k_INSTALACI$, 1)
+                ChDir cesta_k_INSTALACI$
+                End                                         'Konec programu
+              End If
+            End If
+          End If
+        Next j
+      Next i
+    Next číslo_synonyma
+  Next číslo_slova
+ 
+ 'Zaznamenáno, že SLOVNÍK byl načten OK
+  Slovník_OK = True
+  
+  Line2.Visible = True
+'  ChDir Aktual_cesta$
+  ChDrive Left$(cesta_k_INSTALACI$, 1)
+  ChDir cesta_k_INSTALACI$
+  cmd_VYBER_SLOVNIK.Enabled = True
+  If Soubor_OK = True And Slovník_OK = True Then
+    frm_KONTEXT_JEDNOTKA.Visible = True
+  End If
+End Sub
+
+
+'  ##  ##  #####  ##     #####
+'  ##  ##  ##     ##     ##  ##
+'  ######  ####   ##     #####
+'  ##  ##  ##     ##     ##
+'  ##  ##  #####  #####  ##
+'##########################################################################################################
+Private Sub Menu_O_programu_Click()
+  Load Form2
+  With Form2: .Height = 4000: .Width = 9744: .Visible = True
+    .Caption = "O programu":
+  End With
+  With Form2.Image1
+    .Height = 3600
+    .Width = 9600
+    .Left = 0:
+    .Top = 0:
+    .Visible = True
+  End With
+End Sub
+Private Sub Menu_WWW_Click()
+ 'Martin
+  ShellExecute Form1.hwnd, "open", "https://github.com/COOA-software/COOA", vbNullString, vbNullString, 3&
+End Sub
+
+'######################################################################################################################
+' ODSTRANĚNÍ ODSTAVCŮ, VĚT A NADBYTEČNÝCH ZNAKŮ A PŘEVOD NA MALÁ PÍSMENA
+'######################################################################################################################
+Sub ODSTRAŇ_ODSTAVCE()
+ 'Konce ODSTAVCŮ
+Dim P As Long
+  lbl_PRACUJI.Caption = "Odstraňování nadbytečných znaků": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+  ProgressBar.Min = 0
+  ProgressBar.Max = 15
+  P = 1: ProgressBar.Value = P
+  ProgressBar.Visible = True
+  retezec$ = Replace(retezec$, vbLf, "", , , vbBinaryCompare)     'LF
+  retezec$ = Replace(retezec$, vbCr, " ", , , vbBinaryCompare)    'CR
+  retezec$ = Replace(retezec$, "  ", " ")                         '2 MEZERY JEDNOU
+End Sub
+'####### MARTIN ########################################################################################################
+Sub UPRAV_VŠECHNY_ZNAKY()
+Dim i As Long, P As Long
+'0 Použito všude kromě Slov (navíc ještě u Okolí)
+'1 Konce odstavců ponechány beze změn
+'2 Konce Vět ponechány - kolem konců Vět vloženy mezery
+'3 Ostatní znaky ponechány - kolem nich vloženy mezery
+  DoEvents
+  lbl_PRACUJI.Caption = "Odstraňování nadbytečných znaků": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+  ProgressBar.Min = 0
+  ProgressBar.Max = 15 '14 '60
+  P = 2: ProgressBar.Value = P
+  ProgressBar.Visible = True
+  'Konce Vět
+  retezec$ = Replace(retezec$, ".", " . "):       'Vložení mezery za každou čárku
+  retezec$ = Replace(retezec$, "?", " ? "):       'Vložení mezery za každý středník
+  retezec$ = Replace(retezec$, "!", " ! "):       'Vložení mezery za každou dvojtečku
+ 'Běžné znaky
+  retezec$ = Replace(retezec$, ",", " , "):       'Vložení mezery za každou čárku
+  retezec$ = Replace(retezec$, ";", " ; "):       'Vložení mezery za každý středník
+  retezec$ = Replace(retezec$, ":", " : "):       'Vložení mezery za každou dvojtečku
+  retezec$ = Replace(retezec$, "-", " - "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "(", " ( "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, ")", " ) "):       'Vložení mezery
+  retezec$ = Replace(retezec$, ">", " > "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "<", " < "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "=", " = "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "'", " ' "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "{", " { "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "}", " } "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "[", " [ "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "]", " ] "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "#", " # "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "&", " & "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "@", " @ "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "*", " * "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "$", " $ "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "§", " § "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "%", " % "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "_", " _ "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "/", " / "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "\", " \ "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "1", " 1 "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "2", " 2 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "3", " 3 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "4", " 4 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "5", " 5 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "6", " 6 "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "7", " 7 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "8", " 8 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "9", " 9 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "0", " 0 "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "+", " + "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "-", " - "):       'Vložení mezery
+  retezec$ = Replace(retezec$, Chr$(9), " "):     'Tab
+  retezec$ = Replace(retezec$, Chr$(34), " "):    '& Chr$(34) & " "):  'Uvozovky
+  retezec$ = Replace(retezec$, Chr$(132), " "):   '& Chr$(132) & " "): 'Uvozovky dole
+  retezec$ = Replace(retezec$, Chr$(147), " "):   '& Chr$(147) & " "): 'Uvozovky nahoře
+  retezec$ = Replace(retezec$, Chr$(148), " "):   '& Chr$(148) & " "): 'Uvozovky
+ 'Speciální znaky
+  retezec$ = Replace(retezec$, Chr$(150), " " & Chr$(150) & " "): '-
+  retezec$ = Replace(retezec$, Chr$(133), " " & Chr$(133) & " "): '…  3 tečky
+  retezec$ = Replace(retezec$, Chr$(215), " " & Chr$(215) & " "): 'x  krát
+  retezec$ = Replace(retezec$, Chr$(128), " " & Chr$(128) & " "): P = P + 1: ProgressBar.Value = P  '€
+  retezec$ = Replace(retezec$, Chr$(180), " " & Chr$(180) & " "): '+
+  retezec$ = Replace(retezec$, Chr$(246), " " & Chr$(246) & " "): '÷
+  retezec$ = Replace(retezec$, Chr$(174), " " & Chr$(174) & " "): '«
+  retezec$ = Replace(retezec$, Chr$(175), " " & Chr$(175) & " "): '»
+  retezec$ = Replace(retezec$, Chr$(176), " " & Chr$(176) & " "): P = P + 1: ProgressBar.Value = P  '-
+  retezec$ = Replace(retezec$, Chr$(177), " " & Chr$(177) & " "): '-
+  retezec$ = Replace(retezec$, Chr$(126), " " & Chr$(126) & " "): '~
+  retezec$ = Replace(retezec$, Chr$(94), " " & Chr$(94) & " "):   '^
+  retezec$ = Replace(retezec$, Chr$(240), " " & Chr$(240) & " "): '­
+  retezec$ = Replace(retezec$, Chr$(39), " " & Chr$(39) & " "):   P = P + 1: ProgressBar.Value = P   ''
+  retezec$ = Replace(retezec$, Chr$(173), ""):    '-  rozdělení slova
+ 'Odstranění nadbytečných mezer
+  retezec$ = Replace(retezec$, "     ", " "):     '5 mezer nahradím jednou mezerou
+  retezec$ = Replace(retezec$, "    ", " "):      '4 mezery nahradím jednou mezerou
+  retezec$ = Replace(retezec$, "   ", " "):       '3 mezery nahradím jednou mezerou
+  Do
+    DoEvents                                      'Poskytnutí času jiným procesům.
+    retezec$ = Replace(retezec$, "  ", " ")       '2 mezery nahradím jednou mezerou
+    i = InStr(retezec$, "  ")                     'Pokud ještě v souboru existují dvě mezery, nahraď
+    If i = 0 Then Exit Do                         'Už nikde nejsou dvě mezery, konec
+  Loop
+  P = P + 1: ProgressBar.Value = P
+ 'Odstranění nadbytečných teček
+  Do
+    DoEvents                                      'Poskytnutí času jiným procesům.
+    retezec$ = Replace(retezec$, "..", ".")       'Dvě tečky nahradím jednou tečkou
+    i = InStr(retezec$, "..")                     'Pokud ještě v souboru existují dvě mezery, nahraď
+    If i = 0 Then Exit Do                         'Už nikde nejsou dvě mezery, konec
+  Loop
+  P = P + 1: ProgressBar.Value = P
+ 'Převod na malá písmena
+  retezec$ = Trim$(LCase$(retezec$))              'Převod na malá písmena
+End Sub
+'###############################################################################################################################################
+Sub ODSTRAŇ_ZNAKY_PRO_SLOVA()
+Dim i As Long, P As Long
+'0 - Použito jen pro slova
+'1 Odstraněny konce Odstavců
+'2 Konce Vět odstraněny - místo nich vložena mezera
+'2 Ostatní znaky odstraněny - místo nich vložena mezera
+  DoEvents
+  lbl_PRACUJI.Caption = "Odstraňování nadbytečných znaků": lbl_PRACUJI.Visible = True: lbl_PRACUJI.Refresh
+  ProgressBar.Min = 0
+  ProgressBar.Max = 15
+  P = 2: ProgressBar.Value = P
+  ProgressBar.Visible = True
+ 'Odstranění konců Vět a Odstavců
+  retezec$ = Replace(retezec$, vbCr, " ", , , vbBinaryCompare) 'Odstraň CR
+  retezec$ = Replace(retezec$, vbLf, " ", , , vbBinaryCompare) 'Odstraň LF
+  retezec$ = Replace(retezec$, ".", " "):       'Místo . mezera
+  retezec$ = Replace(retezec$, "?", " "):       'Místo ? mezera
+  retezec$ = Replace(retezec$, "!", " "):       'Místo ! mezera
+ 'Odstranění běžných znaků
+  retezec$ = Replace(retezec$, ",", " "):       'Vložení mezery před a za každou čárku
+  retezec$ = Replace(retezec$, ";", " "):       'Vložení mezery za každý středník
+  retezec$ = Replace(retezec$, ":", " "):       'Vložení mezery za každou dvojtečku
+  retezec$ = Replace(retezec$, "-", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "(", " "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, ")", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, ">", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "<", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "=", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "'", " "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "{", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "}", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "[", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "]", " "):       'Vložení mezery
+'  retezec$ = Replace(retezec$, "#", " "):       p = p + 1: ProgressBar.Value = p 'Vložení mezery
+  retezec$ = Replace(retezec$, "&", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "@", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "*", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "$", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "§", " "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "%", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "_", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "/", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "\", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "1", " "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "2", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "3", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "4", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "5", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "6", " "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "7", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "8", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "9", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "0", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, "+", " "):       P = P + 1: ProgressBar.Value = P 'Vložení mezery
+  retezec$ = Replace(retezec$, "-", " "):       'Vložení mezery
+  retezec$ = Replace(retezec$, Chr$(9), " ", , , vbBinaryCompare):    'Místo Tab vložím mezeru
+  retezec$ = Replace(retezec$, Chr$(34), " "):  '& Chr$(34) & " "):   'Uvozovky
+  retezec$ = Replace(retezec$, Chr$(132), " "): '& Chr$(132) & " "):  'Uvozovky dole
+  retezec$ = Replace(retezec$, Chr$(147), " "): '& Chr$(147) & " "):  'Uvozovky nahoře
+  retezec$ = Replace(retezec$, Chr$(148), " "): '& Chr$(148) & " "):  'Uvozovky
+ 'Odstranění speciálních znaků
+  retezec$ = Replace(retezec$, Chr$(39), " "):  P = P + 1: ProgressBar.Value = P   ''
+  retezec$ = Replace(retezec$, Chr$(94), " "):  '^
+  retezec$ = Replace(retezec$, Chr$(126), " "): '~
+  retezec$ = Replace(retezec$, Chr$(128), " "): '€
+  retezec$ = Replace(retezec$, Chr$(133), " "): '…  3 tečky
+  retezec$ = Replace(retezec$, Chr$(160), " "): '…  3 tečky
+  retezec$ = Replace(retezec$, Chr$(246), " "): '÷
+  retezec$ = Replace(retezec$, Chr$(150), " "): P = P + 1: ProgressBar.Value = P  '-
+  retezec$ = Replace(retezec$, Chr$(173), " "): '-  rozdělení slova
+  retezec$ = Replace(retezec$, Chr$(174), " "): '«
+  retezec$ = Replace(retezec$, Chr$(175), " "): '»
+  retezec$ = Replace(retezec$, Chr$(176), " "): P = P + 1: ProgressBar.Value = P   '-
+  retezec$ = Replace(retezec$, Chr$(177), " "): '-
+  retezec$ = Replace(retezec$, Chr$(180), " "): '+
+  retezec$ = Replace(retezec$, Chr$(215), " "): 'x  krát
+  retezec$ = Replace(retezec$, Chr$(240), " "): '­
+ 'Odstranění nadbytečných mezer
+  retezec$ = Replace(retezec$, "     ", " "):   '5 mezer nahradím jednou mezerou
+  retezec$ = Replace(retezec$, "    ", " "):    '4 mezery nahradím jednou mezerou
+  retezec$ = Replace(retezec$, "   ", " "):     '3 mezery nahradím jednou mezerou
+  Do
+    DoEvents                                    'Poskytnutí času jiným procesům.
+    retezec$ = Replace(retezec$, "  ", " ")     '2 mezery nahradím jednou mezerou
+    i = InStr(retezec$, "  ")                   'Pokud ještě v souboru existují dvě mezery, nahraď
+    If i = 0 Then Exit Do                       'Už nikde nejsou dvě mezery, konec
+  Loop
+  P = P + 1: ProgressBar.Value = P
+ 'Odstranění nadbytečných teček
+  Do
+    DoEvents                                    'Poskytnutí času jiným procesům.
+    retezec$ = Replace(retezec$, "..", ".")     'Dvě tečky nahradím jednou tečkou
+    i = InStr(retezec$, "..")                   'Pokud ještě v souboru existují dvě mezery, nahraď
+    If i = 0 Then Exit Do                       'Už nikde nejsou dvě mezery, konec
+  Loop
+  P = P + 1: ProgressBar.Value = P
+ 'Převod na malá písmena
+  retezec$ = Trim$(LCase$(retezec$))            'Převod na malá písmena
+End Sub
